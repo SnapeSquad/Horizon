@@ -1,40 +1,40 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Данные гардероба
+    // --- ОБНОВЛЕННЫЕ ДАННЫЕ ГАРДЕРОБА С ИКОНКАМИ LUCIDE ---
     const wardrobeData = {
         head: [
-            { name: "Шлем", icon: "fas fa-helmet-battle" },
-            { name: "Шляпа", icon: "fas fa-hat-cowboy" },
-            { name: "Кепка", icon: "fas fa-baseball-ball" },
-            { name: "Очки", icon: "fas fa-glasses" },
-            { name: "Маска", icon: "fas fa-mask" }
+            { name: "Корона", icon: "crown" },
+            { name: "Шляпа", icon: "person-standing" },
+            { name: "Очки", icon: "glasses" },
+            { name: "Маска", icon: "theater" },
+            { name: "Наушники", icon: "headphones" }
         ],
         body: [
-            { name: "Куртка", icon: "fas fa-jacket" },
-            { name: "Футболка", icon: "fas fa-tshirt" },
-            { name: "Доспехи", icon: "fas fa-shield-alt" },
-            { name: "Плащ", icon: "fas fa-vest" },
-            { name: "Жилет", icon: "fas fa-vest-patches" }
+            { name: "Толстовка", icon: "user-round" },
+            { name: "Футболка", icon: "shirt" },
+            { name: "Доспехи", icon: "shield" },
+            { name: "Плащ", icon: "user-round-search" },
+            { name: "Жилет", icon: "user-round-cog" }
         ],
         legs: [
-            { name: "Джинсы", icon: "fas fa-jeans" },
-            { name: "Шорты", icon: "fas fa-swimming-pool" },
-            { name: "Юбка", icon: "fas fa-female" },
-            { name: "Штаны", icon: "fas fa-hat-cowboy-side" },
-            { name: "Поножи", icon: "fas fa-shield-virus" }
+            { name: "Джинсы", icon: "user-round" },
+            { name: "Шорты", icon: "user-round" },
+            { name: "Брюки", icon: "user-round" },
+            { name: "Спорт. штаны", icon: "user-round" },
+            { name: "Поножи", icon: "swords" }
         ],
         shoes: [
-            { name: "Кроссовки", icon: "fas fa-walking" },
-            { name: "Сапоги", icon: "fas fa-boot" },
-            { name: "Сандалии", icon: "fas fa-shoe-prints" },
-            { name: "Тапочки", icon: "fas fa-socks" },
-            { name: "Лапти", icon: "fas fa-haykal" }
+            { name: "Кроссовки", icon: "footprints" },
+            { name: "Сапоги", icon: "footprints" },
+            { name: "Сандалии", icon: "footprints" },
+            { name: "Кеды", icon: "footprints" },
+            { name: "Ботинки", icon: "footprints" }
         ],
         accessories: [
-            { name: "Часы", icon: "fas fa-clock" },
-            { name: "Рюкзак", icon: "fas fa-backpack" },
-            { name: "Крылья", icon: "fas fa-feather-alt" },
-            { name: "Хвост", icon: "fas fa-paw" },
-            { name: "Пояс", icon: "fas fa-grip-lines" }
+            { name: "Часы", icon: "clock" },
+            { name: "Рюкзак", icon: "briefcase" },
+            { name: "Крылья", icon: "feather" },
+            { name: "Ожерелье", icon: "gem" },
+            { name: "Пояс", icon: "gem" }
         ]
     };
 
@@ -74,6 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loadClothes('head');
         setupEventListeners();
         setActiveButton('main-btn');
+        // Инициализируем вид персонажа при запуске
+        updateCharacterAppearance();
     }
 
     // Настройка обработчиков событий
@@ -114,9 +116,10 @@ document.addEventListener('DOMContentLoaded', function() {
             showMessage('Магазин', 'info');
         });
 
-        // Кнопка ИГРАТЬ
+        // --- ОБНОВЛЕННАЯ ЛОГИКА КНОПКИ "ИГРАТЬ" ---
         elements.playBtn.addEventListener('click', () => {
-            showMessage('Запуск игры...', 'success');
+            showMessage('Подключение к серверу...', 'info');
+            // В будущем здесь будет реальная логика подключения.
         });
 
         // Закрытие модального окна гардероба
@@ -135,14 +138,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Поиск одежды
-        elements.searchInput.addEventListener('input', (e) => {
-            state.searchQuery = e.target.value.toLowerCase();
-            filterClothes();
-        });
+        const searchInput = document.getElementById('search-clothes');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                state.searchQuery = e.target.value.toLowerCase();
+                filterClothes();
+            });
+        }
 
         // Вращение персонажа
-        elements.rotateLeft.addEventListener('click', () => rotateCharacter(-45));
-        elements.rotateRight.addEventListener('click', () => rotateCharacter(45));
+        const rotateLeftBtn = document.getElementById('rotate-left');
+        const rotateRightBtn = document.getElementById('rotate-right');
+        if (rotateLeftBtn && rotateRightBtn) {
+            rotateLeftBtn.addEventListener('click', () => rotateCharacter(-45));
+            rotateRightBtn.addEventListener('click', () => rotateCharacter(45));
+        }
     }
 
     // Установить активную кнопку в левой панели
@@ -150,14 +160,30 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.leftButtons.forEach(btn => {
             btn.classList.remove('active');
         });
-        document.getElementById(buttonId).classList.add('active');
+        const button = document.getElementById(buttonId);
+        if (button) {
+            button.classList.add('active');
+        }
     }
 
-    // Показать страницу
+    // --- ОБНОВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ СТРАНИЦ С АНИМАЦИЕЙ ---
     function showPage(pageId) {
+        if (state.activePage === pageId) return;
+
+        const currentPage = document.getElementById(`${state.activePage}-page`);
+        const nextPage = document.getElementById(`${pageId}-page`);
+
+        if (currentPage) {
+            currentPage.classList.remove('active');
+        }
+
         state.activePage = pageId;
-        elements.pages.forEach(page => page.classList.remove('active'));
-        document.getElementById(`${pageId}-page`).classList.add('active');
+
+        setTimeout(() => {
+            if (nextPage) {
+                nextPage.classList.add('active');
+            }
+        }, 200);
     }
 
     // Открыть модальное окно гардероба
@@ -176,30 +202,29 @@ document.addEventListener('DOMContentLoaded', function() {
         state.currentCategory = category;
         const clothes = wardrobeData[category];
         
-        // Обновить активную вкладку
         elements.categoryTabs.forEach(tab => {
             tab.classList.toggle('active', tab.dataset.category === category);
         });
         
-        // Очистить список
         elements.clothesList.innerHTML = '';
         
-        // Добавить элементы одежды
         clothes.forEach(item => {
             const isSelected = state.selectedItems[category]?.name === item.name;
             const clothingItem = document.createElement('div');
-            clothingItem.className = `clothing-item ${isSelected ? 'selected' : ''}`;
+            clothingItem.className = `clothing-item glass-effect ${isSelected ? 'selected' : ''}`;
             clothingItem.dataset.name = item.name;
             clothingItem.dataset.category = category;
             
             clothingItem.innerHTML = `
-                <i class="${item.icon}"></i>
+                <i data-lucide="${item.icon}"></i>
                 <span>${item.name}</span>
             `;
             
             clothingItem.addEventListener('click', () => selectClothing(item, category));
             elements.clothesList.appendChild(clothingItem);
         });
+
+        lucide.createIcons();
     }
 
     // Переключить категорию
@@ -209,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Выбрать одежду
     function selectClothing(item, category) {
-        // Если уже выбрана - снять выбор
         if (state.selectedItems[category]?.name === item.name) {
             delete state.selectedItems[category];
             showMessage(`Снято: ${item.name}`);
@@ -218,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showMessage(`Выбрано: ${item.name}`);
         }
         
-        // Обновить UI
         updateClothingSelection(category);
         updateCharacterAppearance();
     }
@@ -243,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (matchesSearch) hasResults = true;
         });
         
-        // Показать ошибку если ничего не найдено
         if (!hasResults && state.searchQuery) {
             showError('Такого нету :(');
         }
@@ -255,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.character.style.transform = `rotateY(${state.characterRotation}deg)`;
     }
 
-    // Обновить внешний вид персонажа
+    // --- ВОССТАНОВЛЕННАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ ПЕРСОНАЖА ---
     function updateCharacterAppearance() {
         const colors = {
             head: state.selectedItems.head ? '#FFD700' : '#8B4513',
@@ -264,16 +286,22 @@ document.addEventListener('DOMContentLoaded', function() {
             shoes: state.selectedItems.shoes ? '#333' : '#333'
         };
         
-        document.querySelector('.character-head').style.backgroundColor = colors.head;
-        document.querySelector('.character-body').style.backgroundColor = colors.body;
-        document.querySelector('.character-legs').style.backgroundColor = colors.legs;
-        document.querySelector('.character-shoes').style.backgroundColor = colors.shoes;
+        const head = document.querySelector('.character-head');
+        const body = document.querySelector('.character-body');
+        const legs = document.querySelector('.character-legs');
+        const shoes = document.querySelector('.character-shoes');
+
+        if (head) head.style.backgroundColor = colors.head;
+        if (body) body.style.backgroundColor = colors.body;
+        if (legs) legs.style.backgroundColor = colors.legs;
+        if (shoes) shoes.style.backgroundColor = colors.shoes;
     }
 
     // Показать сообщение
     function showMessage(text, type = 'info') {
-        console.log(`${type}: ${text}`);
-        
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) existingNotification.remove();
+
         if (type === 'error') {
             showError(text);
             return;
@@ -282,26 +310,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const notification = document.createElement('div');
         notification.className = 'notification';
         notification.textContent = text;
-        notification.style.cssText = `
-            position: fixed;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: ${type === 'success' ? '#4CAF50' : '#2196F3'};
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            z-index: 1001;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            animation: fadeInUp 0.3s ease;
-            text-align: center;
-            max-width: 80%;
-        `;
         
         document.body.appendChild(notification);
         
-        // Автоматически удалить через 3 секунды
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.remove();
@@ -309,23 +320,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // Показать ошибку
+    // --- ОБНОВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ ОШИБОК С LUCIDE ---
     function showError(text) {
-        // Удалить старые сообщения об ошибке
         const existingError = document.querySelector('.error-message');
         if (existingError) existingError.remove();
         
-        // Создать новое сообщение
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.innerHTML = `
-            <i class="fas fa-exclamation-circle"></i>
+            <i data-lucide="alert-circle"></i>
             <span>${text}</span>
         `;
         
         document.body.appendChild(errorDiv);
         
-        // Автоматически удалить через 3 секунды
+        lucide.createIcons();
+
         setTimeout(() => {
             if (errorDiv.parentNode) {
                 errorDiv.remove();

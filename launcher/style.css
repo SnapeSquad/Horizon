@@ -1,17 +1,60 @@
+/* --- ГЛОБАЛЬНЫЕ СТИЛИ --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    background-color: #0c0a1a;
+    color: #f0f0f0;
     min-height: 100vh;
-    overflow: hidden !important;
+    overflow: hidden;
+    position: relative;
 }
 
-/* Основной контейнер */
+/* --- ФОНОВЫЕ ЭФФЕКТЫ --- */
+body::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -20%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(118, 75, 162, 0.3), transparent 70%);
+    filter: blur(150px);
+    z-index: -1;
+    animation: background-pan 25s infinite alternate;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    right: -20%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.3), transparent 70%);
+    filter: blur(150px);
+    z-index: -1;
+    animation: background-pan-2 30s infinite alternate;
+}
+
+@keyframes background-pan {
+    from { transform: translate(-10%, 10%); }
+    to { transform: translate(10%, -10%); }
+}
+
+@keyframes background-pan-2 {
+    from { transform: translate(10%, -10%); }
+    to { transform: translate(-10%, 10%); }
+}
+
+
+/* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
 .container {
     width: 100%;
     height: 100vh;
@@ -19,62 +62,49 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    backdrop-filter: blur(50px);
 }
 
-/* Фоновые цветные столбы */
-.color-columns {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
+/* Удаляем старые цветные колонки */
+.color-columns { display: none; }
+
+/* --- ОБЩИЙ СТИЛЬ ДЛЯ "СТЕКЛЯННЫХ" ЭЛЕМЕНТОВ --- */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.color-column {
-    flex: 1;
-    height: 100%;
+.glass-effect:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
 }
 
-.color-column.pink { background: #E91E63; }
-.color-column.purple { background: #9C27B0; }
-.color-column.orange { background: #FF9800; }
-.color-column.blue { background: #2196F3; }
-.color-column.green { background: #4CAF50; }
 
-/* Логотип в левом верхнем углу */
+/* --- ЛОГОТИП --- */
 .logo-container {
     position: fixed;
-    top: 30px;
-    left: 30px;
+    top: 40px;
+    left: 40px;
     z-index: 1000;
 }
 
 .logo {
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0);
-    border-radius: 18px;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.logo:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    border-color: rgba(102, 126, 234, 0.5);
 }
 
 .logo img {
-    width: 80%;
-    height: 80%;
+    width: 70%;
+    height: 70%;
     object-fit: contain;
     border-radius: 12px;
     transition: transform 0.3s ease;
@@ -84,426 +114,197 @@ body {
     transform: scale(1.1);
 }
 
-/* Кнопки слева */
+
+/* --- КНОПКИ (ОБЩИЕ СТИЛИ) --- */
+.btn {
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- ЛЕВЫЕ КНОПКИ --- */
 .left-buttons {
     position: absolute;
     top: 50%;
-    left: 50px;
+    left: 40px;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
     z-index: 100;
 }
 
 .left-btn {
-    width: 70px;
-    height: 70px;
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 28px;
-    color: #333;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-.left-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.left-btn:hover::before {
-    transform: translateX(100%);
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    font-size: 24px;
+    color: #e0e0e0;
 }
 
 .left-btn:hover {
-    transform: translateY(-5px) scale(1.05);
-    color: #b3beee;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 0);
+    transform: translateY(-4px);
+    color: #fff;
 }
 
 .left-btn.active {
-    background: rgba(255, 255, 255, 0);
-    color: #667eea;
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    background: rgba(102, 126, 234, 0.3);
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.5);
 }
 
+/* --- ВЕРХНИЕ КНОПКИ (Форум, О нас, Магазин) --- */
 .column-buttons {
     position: absolute;
-    top: 50px;
+    top: 40px;
     width: 100%;
     display: flex;
     justify-content: center; 
-    gap: 50px; 
+    gap: 20px;
     z-index: 100;
 }
 
-.forum-container {
-    width: auto; /* Изменено с 20% на auto */
-    display: flex;
-    justify-content: center;
-}
-
-.about-container {
-    width: auto; /* Изменено с 20% на auto */
-    display: flex;
-    justify-content: center;
-}
-
-.shop-container {
-    width: auto; /* Изменено с 20% на auto */
-    display: flex;
-    justify-content: center;
-}
-
 .text-btn {
-    width: 150px; /* Немного уменьшил ширину */
-    height: 60px;
-    border: none;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: 600;
-    color: white;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
+    padding: 12px 28px;
+    height: 50px;
+    font-size: 16px;
+    color: #e0e0e0;
+}
+.text-btn:hover {
+    color: #fff;
+    transform: translateY(-3px);
 }
 
-.text-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.text-btn:hover::before {
-    transform: translateX(100%);
-}
-
-.forum-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-}
-
-.forum-btn:hover {
-    background: rgba(255, 255, 255, 0);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(156, 39, 176, 0.5);
-    border-color: rgba(255, 255, 255, 0.658);
-}
-
-.about-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-}
-
-.about-btn:hover {
-    background: rgba(255, 255, 255, 0);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(255, 152, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-.shop-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-}
-
-.shop-btn:hover {
-    background: rgba(255, 255, 255, 0);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(33, 150, 243, 0.5);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-/* Основной контент */
+/* --- ОСНОВНОЙ КОНТЕНТ --- */
 .main-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 100px 80px 150px;
-    overflow-y: auto;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.main-content > * {
-    pointer-events: auto;
+    text-align: center;
 }
 
 .main-content h1 {
-    color: #333;
-    margin-bottom: 50px;
-    font-size: 48px;
+    font-size: 5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #99a4d1 0%, #2b0253 100%);
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #e0e0e0 0%, #a7b3ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
-    letter-spacing: 1px;
-    text-align: center;
+    margin-bottom: 40px;
 }
 
+/* --- АНИМАЦИИ СТРАНИЦ --- */
 .page {
     display: none;
+    animation: fade-out 0.4s ease-in-out forwards;
 }
-
 .page.active {
     display: block;
+    animation: fade-in 0.4s ease-in-out forwards;
 }
 
-/* Карточка приветствия */
-.welcome-card {
-    background: rgba(255, 255, 255, 0.95);
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Карточки (Приветствие, Статус сервера) */
+.welcome-card, .server-status, .section-header {
+    padding: 30px 40px;
     border-radius: 24px;
-    padding: 40px;
-    margin-bottom: 40px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.welcome-card h2 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 32px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    justify-content: center;
-}
-
-.welcome-card h2 i {
-    color: #667eea;
-}
-
-.welcome-card p {
-    font-size: 18px;
-    color: #666;
-    line-height: 1.6;
-    text-align: center;
-}
-
-/* Статус сервера */
-.server-status {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
     max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 20px auto;
+    animation: card-appear 0.5s ease-in-out backwards;
+}
+.welcome-card { animation-delay: 0.1s; }
+.server-status { animation-delay: 0.2s; }
+
+@keyframes card-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
-.server-status h3 {
-    color: #333;
-    margin-bottom: 25px;
+
+.welcome-card h2, .server-status h3, .section-header h2 {
     font-size: 24px;
+    margin-bottom: 15px;
+    color: #fff;
     display: flex;
     align-items: center;
-    gap: 12px;
     justify-content: center;
+    gap: 12px;
+}
+.welcome-card h2 i, .server-status h3 i, .section-header h2 i {
+    color: #a7b3ff;
 }
 
-.server-status h3 i {
-    color: #4CAF50;
+.welcome-card p, .section-header p {
+    font-size: 16px;
+    color: #c0c0c0;
+    line-height: 1.6;
 }
 
 .server-info {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    text-align: left;
 }
 
 .info-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.info-row:last-child {
-    border-bottom: none;
-}
-
-.label {
-    font-weight: 600;
-    color: #555;
     font-size: 16px;
+    padding: 8px 0;
 }
+.label { color: #c0c0c0; }
+.value { font-weight: 700; color: #fff; }
 
-.value {
-    font-weight: 700;
-    color: #333;
-    font-size: 18px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
 
-/* Заголовки разделов */
-.section-header {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 24px;
-    padding: 40px;
-    margin-bottom: 40px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.section-header h2 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 32px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    justify-content: center;
-}
-
-.section-header p {
-    font-size: 18px;
-    color: #666;
-    line-height: 1.6;
-    text-align: center;
-}
-
-/* Кнопка открытия гардероба */
-.open-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(75, 69, 69, 0);
-    border-radius: 20px;
-    color: white;
-    padding: 25px 50px;
-    font-size: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-    position: relative;
-    overflow: hidden;
-    margin: 0 auto;
-}
-
-.open-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: translateX(-100%);
-}
-
-.open-btn:hover::before {
-    animation: shimmer 1s ease;
-}
-
-@keyframes shimmer {
-    100% {
-        transform: translateX(100%);
-    }
-}
-
-.open-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.6);
-}
-
-/* Кнопка Настройки внизу */
+/* --- НИЖНИЕ КНОПКИ (Настройки, Играть) --- */
 .settings-button-container {
     position: fixed;
     bottom: 40px;
-    left: 50px;
+    left: 40px;
     z-index: 100;
 }
 
 .settings-btn-bottom {
-    width: 70px;
-    height: 70px;
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 28px;
-    color: #333;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    font-size: 24px;
+    color: #e0e0e0;
 }
-
-.settings-btn-bottom::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.settings-btn-bottom:hover::before {
-    transform: translateX(100%);
-}
-
 .settings-btn-bottom:hover {
-    transform: translateY(-5px) scale(1.05);
-    color: #FF9800;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 1);
+    transform: translateY(-4px) rotate(45deg);
+    color: #fff;
 }
 
-/* Кнопка ИГРАТЬ */
 .play-button-container {
     position: fixed;
     bottom: 40px;
@@ -513,400 +314,229 @@ body {
 }
 
 .play-btn {
-    width: 250px;
+    width: 280px;
     height: 70px;
-    background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
-    border-radius: 15px;
+    border-radius: 20px;
     color: white;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 15px 35px rgba(50, 205, 50, 0.4);
-    position: relative;
-    overflow: hidden;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.play-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.8s ease;
-}
-
-.play-btn:hover::before {
-    transform: translateX(100%);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
 }
 
 .play-btn:hover {
-    background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%);
-    transform: translateY(-8px);
-    box-shadow: 0 20px 45px rgba(144, 238, 144, 0.6);
+    transform: translateY(-6px) translateX(-50%);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+.play-btn:active {
+    transform: translateY(-2px) translateX(-50%);
 }
 
-/* Модальное окно гардероба */
+
+/* --- МОДАЛЬНОЕ ОКНО ГАРДЕРОБА --- */
 .modal {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(12, 10, 26, 0.5);
     z-index: 2000;
+    display: none; /* Управляется JS */
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(8px);
+    animation: modal-background-fade-in 0.4s ease;
 }
 
-.modal.active {
-    display: flex;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
+.modal.active { display: flex; }
 
 .modal-content {
-    background: white;
     border-radius: 24px;
-    width: 95%;
-    max-width: 1400px;
-    max-height: 90vh;
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    width: 90%;
+    max-width: 1200px;
+    height: 85vh;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: modal-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes slideUp {
+@keyframes modal-background-fade-in {
+    from { background: rgba(12, 10, 26, 0); }
+    to { background: rgba(12, 10, 26, 0.5); }
+}
+
+@keyframes modal-slide-up {
     from {
         opacity: 0;
-        transform: translateY(50px) scale(0.95);
+        transform: translateY(50px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
-/* Заголовок модального окна */
+
 .modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 28px 40px;
+    padding: 24px 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: 24px 24px 0 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-title {
     display: flex;
     align-items: center;
     gap: 16px;
-}
-
-.modal-title i {
-    font-size: 32px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.modal-title h2 {
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
 .close-btn {
-    background: rgba(255, 255, 255, 0.2);
+    background: transparent;
     border: none;
-    color: white;
-    font-size: 32px;
+    color: #e0e0e0;
+    font-size: 30px;
     cursor: pointer;
-    padding: 0;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
     transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
 }
-
 .close-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
     transform: rotate(90deg);
 }
 
-/* Поисковая строка */
-.search-container {
-    padding: 24px 40px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background: #fafafa;
-}
-
-.search-box {
-    position: relative;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.search-box i {
-    position: absolute;
-    left: 24px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    font-size: 18px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 18px 24px 18px 60px;
-    border: 2px solid rgba(0, 0, 0, 0.08);
-    border-radius: 16px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.search-box input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
-}
-
-/* Основное тело модального окна */
 .wardrobe-body {
     display: flex;
     flex: 1;
-    padding: 25px 40px 30px;
-    gap: 35px;
+    padding: 24px 32px;
+    gap: 30px;
     overflow: hidden;
-    min-height: 0;
-    max-height: calc(85vh - 180px);
 }
 
-/* Левая часть: Категории и список одежды */
 .clothes-section {
-    flex: 1;
+    flex: 2;
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    max-height: 100%;
+}
+.preview-section {
+    flex: 1;
 }
 
 .category-tabs {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 20px;
-    flex-shrink: 0;
 }
-
 .category-tab {
     flex: 1;
-    background: rgba(0, 0, 0, 0.03);
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 14px;
-    padding: 16px 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #666;
-    font-weight: 600;
-    font-size: 13px;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #c0c0c0;
 }
-
-.category-tab i {
-    font-size: 20px;
-}
-
-.category-tab:hover {
-    background: rgba(102, 126, 234, 0.1);
-    border-color: rgba(102, 126, 234, 0.2);
-    color: #667eea;
-    transform: translateY(-2px);
-}
-
 .category-tab.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    color: white;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    background: rgba(102, 126, 234, 0.3);
+    color: #fff;
+    border-color: rgba(102, 126, 234, 0.5);
 }
 
-.category-tab.active i {
-    color: white;
-}
-
-/* Контейнер списка одежды */
 .clothes-list-container {
     flex: 1;
-    background: rgba(0, 0, 0, 0.02);
-    border: 2px solid rgba(0, 0, 0, 0.05);
+    padding: 16px;
     border-radius: 18px;
-    padding: 18px;
-    overflow: hidden;
-    min-height: 0;
-    max-height: 100%;
+    overflow-y: auto;
 }
-
 .clothes-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 14px;
-    overflow-y: auto;
-    max-height: 100%;
-    padding-right: 8px;
-    height: 100%;
-}
-
-.clothes-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.clothes-list::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-}
-
-.clothes-list::-webkit-scrollbar-thumb {
-    background: rgba(102, 126, 234, 0.5);
-    border-radius: 10px;
-}
-
-.clothes-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(102, 126, 234, 0.7);
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
 }
 
 .clothing-item {
-    background: white;
-    border: 2px solid rgba(0, 0, 0, 0.08);
+    padding: 16px;
     border-radius: 14px;
-    padding: 18px 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    color: #e0e0e0;
 }
-
-.clothing-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.05), transparent);
-    transform: translateX(-100%);
-}
-
-.clothing-item:hover::before {
-    animation: shimmer 1s ease;
-}
-
-.clothing-item:hover {
-    border-color: #667eea;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-}
-
+.clothing-item i { font-size: 24px; margin-bottom: 8px; }
 .clothing-item.selected {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border-color: #667eea;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+    background: rgba(102, 126, 234, 0.3);
+    color: #fff;
+    border-color: rgba(102, 126, 234, 0.5);
 }
 
-.clothing-item i {
-    font-size: 26px;
-    color: #667eea;
-    margin-bottom: 6px;
-}
-
-.clothing-item.selected i {
-    color: #764ba2;
-}
-
-.clothing-item span {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    line-height: 1.3;
-}
-
-/* Правая часть: Модель персонажа и выбранная одежда */
-.preview-section {
-    width: 380px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    flex-shrink: 0;
-    max-height: 100%;
-}
-
-/* Превью персонажа */
 .character-preview {
-    background: rgba(0, 0, 0, 0.02);
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 18px;
     padding: 20px;
-    flex-shrink: 0;
+    border-radius: 18px;
+    height: 100%;
 }
-
-.character-preview h3 {
-    font-size: 17px;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 18px;
+.character-model {
+    height: 300px; /* Увеличено для лучшего вида */
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+}
+.character {
+    width: 100px;
+    height: 180px;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+    position: relative;
 }
 
-.character-preview h3 i {
-    color: #667eea;
+/* --- Стили для восстановленных элементов --- */
+.search-container {
+    padding: 20px 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.search-box {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+}
+.search-box i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+.search-box input {
+    width: 100%;
+    padding: 14px 20px 14px 50px;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+}
+.search-box input:focus {
+    outline: none;
+    background: rgba(0,0,0,0.3);
 }
 
-.character-model {
-    height: 220px;
+.rotation-controls {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-top: 20px;
 }
-
-.character {
-    width: 120px;
-    height: 180px;
-    position: relative;
-    transition: transform 0.5s ease;
+.rotation-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #c0c0c0;
+}
+.rotate-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
 }
 
 .character-head,
@@ -919,6 +549,7 @@ body {
     background: #8B4513;
     border-radius: 8px;
     border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
 }
 
 .character-head {
@@ -948,130 +579,60 @@ body {
     background: #333;
 }
 
-/* Управление вращением */
-.rotation-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    background: white;
-    border-radius: 12px;
-    padding: 14px;
-    border: 2px solid rgba(0, 0, 0, 0.05);
-}
-
-.rotation-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #666;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.rotation-label i {
-    color: #667eea;
-}
-
-.rotate-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: white;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.rotate-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-}
-
-/* Кнопки действий */
-.wardrobe-actions {
-    display: flex;
-    gap: 14px;
-    margin-top: auto;
-    flex-shrink: 0;
-}
-
-.action-btn {
-    flex: 1;
-    padding: 16px 20px;
-    border-radius: 12px;
-    border: 2px solid;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.action-btn.secondary {
-    background: white;
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #666;
-}
-
-.action-btn.secondary:hover {
-    background: rgba(0, 0, 0, 0.02);
-    border-color: rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
-.action-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    color: white;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-}
-
-.action-btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
-}
-
-/* Сообщение об ошибке */
-.error-message {
+/* --- УВЕДОМЛЕНИЯ И ОШИБКИ --- */
+.notification, .error-message {
     position: fixed;
-    top: 30px;
-    right: 30px;
-    background: #ff4444;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 28px;
+    border-radius: 16px;
+    font-weight: 600;
+    z-index: 3000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: notification-appear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes notification-appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) translateX(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) translateX(-50%);
+    }
+}
+
+
+.notification {
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
-    padding: 18px 25px;
-    border-radius: 14px;
+}
+.error-message {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: white;
     display: flex;
     align-items: center;
     gap: 10px;
-    animation: slideInRight 0.3s ease;
-    z-index: 1001;
-    box-shadow: 0 10px 30px rgba(255, 68, 68, 0.3);
-    max-width: 400px;
-    word-break: break-word;
+    bottom: auto;
+    top: 40px;
+    transform: translateX(0); /* Сброс для ошибки */
+    animation: error-appear 0.4s ease-in-out forwards;
 }
 
-@keyframes slideInRight {
+@keyframes error-appear {
     from {
-        transform: translateX(100%);
         opacity: 0;
+        transform: translateX(20px);
     }
     to {
-        transform: translateX(0);
         opacity: 1;
+        transform: translateX(0);
     }
 }
 
-/* Адаптивность */
+/* --- АДАПТИВНОСТЬ --- */
 @media (max-width: 1200px) {
     .wardrobe-body {
         flex-direction: column;
@@ -1081,13 +642,10 @@ body {
     .preview-section {
         width: 100%;
         flex-direction: row;
+        gap: 25px;
     }
     
     .character-preview {
-        flex: 1;
-    }
-    
-    .selected-section {
         flex: 1;
     }
 }
@@ -1097,83 +655,46 @@ body {
         left: 20px;
         gap: 15px;
     }
-    
     .left-btn {
         width: 60px;
         height: 60px;
-        font-size: 24px;
     }
-    
-    .main-content {
-        padding: 80px 30px 150px;
-    }
-    
     .main-content h1 {
-        font-size: 36px;
+        font-size: 3rem;
     }
-    
     .text-btn {
-        width: 140px;
-        height: 50px;
-        font-size: 16px;
+        padding: 10px 20px;
+        height: 44px;
+        font-size: 14px;
     }
-    
     .play-btn {
-        width: 200px;
+        width: 220px;
         height: 60px;
-        font-size: 20px;
+        font-size: 18px;
     }
-    
     .settings-button-container {
         left: 20px;
-        bottom: 40px;
+        bottom: 20px;
     }
-    
     .settings-btn-bottom {
         width: 60px;
         height: 60px;
-        font-size: 24px;
     }
-    
     .column-buttons {
-        top: 30px;
+        gap: 10px;
     }
-    
     .modal-content {
         width: 95%;
         height: 90vh;
     }
-    
     .wardrobe-body {
         padding: 15px;
-        flex-direction: column;
     }
-    
     .category-tabs {
         overflow-x: auto;
         padding-bottom: 10px;
     }
-    
-    .category-tab {
-        min-width: 100px;
-        padding: 14px 10px;
-        font-size: 12px;
-    }
-    
-    .category-tab i {
-        font-size: 18px;
-    }
-    
     .preview-section {
-        width: 100%;
         flex-direction: column;
-    }
-    
-    .clothes-list {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    }
-    
-    .wardrobe-body {
-        max-height: calc(85vh - 160px);
     }
 }
