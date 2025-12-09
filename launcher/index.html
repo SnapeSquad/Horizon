@@ -3,73 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Launcher</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Horizon Launcher</title>
+    <!-- Подключение библиотеки иконок Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Подключение обновленного CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Логотип -->
     <div class="logo-container">
-        <div class="logo">
+        <div class="logo glass-effect">
             <img src="https://i.pinimg.com/originals/8e/19/8a/8e198a2393ac46c0854e9252f7c24583.jpg" alt="Minecraft Logo">
         </div>
     </div>
+
     <!-- Основной контейнер -->
     <div class="container">
-        <!-- Фоновые цветные столбы -->
-        <div class="color-columns">
-            <div class="color-column pink"></div>
-            <div class="color-column purple"></div>
-            <div class="color-column orange"></div>
-            <div class="color-column blue"></div>
-            <div class="color-column green"></div>
-        </div>
-
         <!-- Кнопки слева -->
         <div class="left-buttons">
-            <button class="left-btn" id="main-btn" title="Главная">
-                <i class="fas fa-home"></i>
+            <button class="left-btn btn glass-effect" id="main-btn" title="Главная">
+                <i data-lucide="home"></i>
             </button>
-            <button class="left-btn" id="servers-btn" title="Серверы">
-                <i class="fas fa-server"></i>
+            <button class="left-btn btn glass-effect" id="servers-btn" title="Серверы">
+                <i data-lucide="server"></i>
             </button>
-            <button class="left-btn" id="wardrobe-btn" title="Гардероб">
-                <i class="fas fa-tshirt"></i>
+            <button class="left-btn btn glass-effect" id="wardrobe-btn" title="Гардероб">
+                <i data-lucide="shirt"></i>
             </button>
         </div>
 
-        <!-- Кнопки в столбах -->
+        <!-- Кнопки вверху -->
         <div class="column-buttons">
-            <div class="forum-container">
-                <button class="text-btn forum-btn" id="forum-btn">
-                    Форум
-                </button>
-            </div>
-            <div class="about-container">
-                <button class="text-btn about-btn" id="about-btn">
-                    О нас
-                </button>
-            </div>
-            <div class="shop-container">
-                <button class="text-btn shop-btn" id="shop-btn">
-                    Магазин
-                </button>
-            </div>
+            <button class="text-btn btn glass-effect" id="forum-btn">Форум</button>
+            <button class="text-btn btn glass-effect" id="about-btn">О нас</button>
+            <button class="text-btn btn glass-effect" id="shop-btn">Магазин</button>
         </div>
 
         <!-- Основной контент -->
         <div class="main-content">
-            <h1>Horizon Launcher</h1>
+            <h1>Horizon</h1>
             
             <!-- Главная страница -->
             <div id="main-page" class="page active">
-                <div class="welcome-card">
-                    <h2><i class="fas fa-gem"></i> Добро пожаловать!</h2>
-                    <p>Выберите нужный раздел в меню слева</p>
+                <div class="welcome-card glass-effect">
+                    <h2><i data-lucide="gem"></i> Добро пожаловать!</h2>
+                    <p>Выберите раздел в меню слева или начните игру.</p>
                 </div>
-                
-                <!-- Статус сервера -->
-                <div class="server-status">
-                    <h3><i class="fas fa-signal"></i> Статус сервера</h3>
+                <div class="server-status glass-effect">
+                    <h3><i data-lucide="activity"></i> Статус сервера</h3>
                     <div class="server-info">
                         <div class="info-row">
                             <span class="label">Сервер:</span>
@@ -87,33 +68,33 @@
                 </div>
             </div>
             
-            <!-- Серверы -->
+            <!-- Страница серверов -->
             <div id="servers-page" class="page">
-                <div class="section-header">
-                    <h2><i class="fas fa-server"></i> Список серверов</h2>
-                    <p>Выберите сервер для подключения</p>
+                <div class="section-header glass-effect">
+                    <h2><i data-lucide="server"></i> Список серверов</h2>
+                    <p>Выберите сервер для подключения.</p>
                 </div>
             </div>
             
-            <!-- Гардероб -->
+            <!-- Страница гардероба (контент теперь в модальном окне) -->
             <div id="wardrobe-page" class="page">
-                <div class="section-header">
-                    <h2><i class="fas fa-tshirt"></i> Настройка внешнего вида</h2>
-                    <p>Персонализируйте своего персонажа</p>
+                <div class="section-header glass-effect">
+                    <h2><i data-lucide="shirt"></i> Гардероб</h2>
+                    <p>Настройте внешний вид своего персонажа.</p>
                 </div>
             </div>
         </div>
 
         <!-- Кнопка Настройки -->
         <div class="settings-button-container">
-            <button class="settings-btn-bottom" id="settings-btn-bottom" title="Настройки">
-                <i class="fas fa-cog"></i>
+            <button class="settings-btn-bottom btn glass-effect" id="settings-btn-bottom" title="Настройки">
+                <i data-lucide="settings"></i>
             </button>
         </div>
 
         <!-- Кнопка ИГРАТЬ -->
         <div class="play-button-container">
-            <button id="play-btn" class="play-btn">
+            <button id="play-btn" class="play-btn btn">
                 ИГРАТЬ
             </button>
         </div>
@@ -121,64 +102,40 @@
 
     <!-- Модальное окно гардероба -->
     <div id="wardrobe-modal" class="modal">
-        <div class="modal-content">
-            <!-- Заголовок модального окна -->
+        <div class="modal-content glass-effect">
             <div class="modal-header">
                 <div class="modal-title">
-                    <i class="fas fa-tshirt"></i>
+                    <i data-lucide="shirt"></i>
                     <h2>Гардероб персонажа</h2>
                 </div>
                 <button class="close-btn">&times;</button>
             </div>
-            
             <!-- Поисковая строка -->
             <div class="search-container">
                 <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="search-clothes" placeholder="Поиск одежды...">
+                    <i data-lucide="search"></i>
+                    <input type-="text" id="search-clothes" placeholder="Поиск одежды...">
                 </div>
             </div>
-            
             <div class="wardrobe-body">
-                <!-- Левая часть: Категории и список одежды -->
+                <!-- Секция выбора -->
                 <div class="clothes-section">
-                    <!-- Вкладки категорий -->
                     <div class="category-tabs">
-                        <button class="category-tab active" data-category="head">
-                            <i class="fas fa-hat-cowboy"></i>
-                            <span>Голова</span>
-                        </button>
-                        <button class="category-tab" data-category="body">
-                            <i class="fas fa-tshirt"></i>
-                            <span>Тело</span>
-                        </button>
-                        <button class="category-tab" data-category="legs">
-                            <i class="fas fa-running"></i>
-                            <span>Ноги</span>
-                        </button>
-                        <button class="category-tab" data-category="shoes">
-                            <i class="fas fa-shoe-prints"></i>
-                            <span>Обувь</span>
-                        </button>
-                        <button class="category-tab" data-category="accessories">
-                            <i class="fas fa-gem"></i>
-                            <span>Аксессуары</span>
-                        </button>
+                        <button class="category-tab btn glass-effect active" data-category="head"><i data-lucide="user-round"></i><span>Голова</span></button>
+                        <button class="category-tab btn glass-effect" data-category="body"><i data-lucide="shirt"></i><span>Тело</span></button>
+                        <button class="category-tab btn glass-effect" data-category="legs"><i data-lucide="person-standing"></i><span>Ноги</span></button>
+                        <button class="category-tab btn glass-effect" data-category="shoes"><i data-lucide="footprints"></i><span>Обувь</span></button>
+                        <button class="category-tab btn glass-effect" data-category="accessories"><i data-lucide="gem"></i><span>Аксессуары</span></button>
                     </div>
-                    
-                    <!-- Список одежды -->
-                    <div class="clothes-list-container">
+                    <div class="clothes-list-container glass-effect">
                         <div id="clothes-list" class="clothes-list">
-                            <!-- Содержимое будет заполняться через JavaScript -->
+                            <!-- Динамически заполняется JS -->
                         </div>
                     </div>
                 </div>
-                
-                <!-- Правая часть: Модель персонажа -->
+                <!-- Секция предпросмотра -->
                 <div class="preview-section">
-                    <!-- Модель персонажа -->
-                    <div class="character-preview">
-                        <h3>Превью персонажа</h3>
+                     <div class="character-preview glass-effect">
                         <div class="character-model">
                             <div class="character" id="character">
                                 <div class="character-head"></div>
@@ -187,26 +144,29 @@
                                 <div class="character-shoes"></div>
                             </div>
                         </div>
-                        
                         <!-- Управление вращением -->
                         <div class="rotation-controls">
-                            <button id="rotate-left" class="rotate-btn">
-                                <i class="fas fa-undo"></i>
+                            <button id="rotate-left" class="rotate-btn btn glass-effect">
+                                <i data-lucide="rotate-ccw"></i>
                             </button>
                             <div class="rotation-label">
-                                <i class="fas fa-sync-alt"></i>
-                                <span>Повернуть модель</span>
+                                <i data-lucide="mouse"></i>
+                                <span>Повернуть</span>
                             </div>
-                            <button id="rotate-right" class="rotate-btn">
-                                <i class="fas fa-redo"></i>
+                            <button id="rotate-right" class="rotate-btn btn glass-effect">
+                                <i data-lucide="rotate-cw"></i>
                             </button>
                         </div>
-                    </div>
+                     </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Инициализация иконок Lucide
+        lucide.createIcons();
+    </script>
 </body>
 </html>

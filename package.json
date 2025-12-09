@@ -4,7 +4,7 @@
   "description": "Horizon Minecraft Launcher built with Electron",
   "main": "launcher/main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron launcher/main.js",
     "build": "electron-builder --win --publish always"
   },
   "keywords": [
