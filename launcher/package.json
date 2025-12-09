@@ -1,0 +1,23 @@
+{
+  "name": "horizon-launcher",
+  "version": "1.0.0",
+  "description": "Minecraft Launcher for Horizon server.",
+  "main": "launcher/main.js", 
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "minecraft",
+    "launcher",
+    "electron"
+  ],
+  "author": "Isya",
+  "license": "ISC",
+  "dependencies": {
+    "electron-better-ipc": "^2.0.0",
+    "minecraft-launcher-core": "^1.15.0"
+  },
+  "devDependencies": {
+    "electron": "^28.2.1"
+  }
+}
