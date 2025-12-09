@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Элементы управления окном -->
+    <div class="window-controls">
+        <button id="minimize-btn" class="window-btn"><i data-lucide="minus"></i></button>
+        <button id="maximize-btn" class="window-btn"><i data-lucide="square"></i></button>
+        <button id="close-btn-win" class="window-btn close-btn-win"><i data-lucide="x"></i></button>
+    </div>
+
     <!-- Логотип -->
     <div class="logo-container">
         <div class="logo glass-effect">
@@ -168,5 +175,38 @@
         // Инициализация иконок Lucide
         lucide.createIcons();
     </script>
+
+    <!-- Модальное окно настроек -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="settings"></i>
+                    <h2>Настройки</h2>
+                </div>
+                <button id="close-settings-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="settings-body">
+                <div class="setting-item">
+                    <label for="theme-toggle">Темная тема</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="theme-toggle" class="toggle-input">
+                        <label for="theme-toggle" class="toggle-label"></label>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label for="ram-slider">Выделенная ОЗУ: <span id="ram-value">4</span> ГБ</label>
+                    <input type="range" id="ram-slider" min="2" max="16" value="4" class="slider">
+                </div>
+                <div class="setting-item recommendation">
+                    <i data-lucide="shield-check"></i>
+                    <div>
+                        <strong>Защитите свой аккаунт</strong>
+                        <p>Включите двухфакторную аутентификацию (2FA) через Telegram или Google Authenticator для максимальной безопасности.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

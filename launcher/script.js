@@ -118,8 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // --- ОБНОВЛЕННАЯ ЛОГИКА КНОПКИ "ИГРАТЬ" ---
         elements.playBtn.addEventListener('click', () => {
-            showMessage('Подключение к серверу...', 'info');
-            // В будущем здесь будет реальная логика подключения.
+            const ram = document.getElementById('ram-slider').value;
+            window.electronAPI.launchGame({ ram });
         });
 
         // Закрытие модального окна гардероба
@@ -153,6 +153,33 @@ document.addEventListener('DOMContentLoaded', function() {
             rotateLeftBtn.addEventListener('click', () => rotateCharacter(-45));
             rotateRightBtn.addEventListener('click', () => rotateCharacter(45));
         }
+
+        // Настройки
+        const settingsModal = document.getElementById('settings-modal');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const ramSlider = document.getElementById('ram-slider');
+        const ramValue = document.getElementById('ram-value');
+
+        elements.settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('active');
+        });
+
+        closeSettingsBtn.addEventListener('click', () => {
+            settingsModal.classList.remove('active');
+        });
+
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+        });
+
+        ramSlider.addEventListener('input', () => {
+            ramValue.textContent = ramSlider.value;
+        });
     }
 
     // Установить активную кнопку в левой панели

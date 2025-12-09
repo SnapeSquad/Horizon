@@ -1,11 +1,22 @@
 const { contextBridge, ipcRenderer } = require('electron');
-const { ipcRenderer: ipcRendererBetter } = require('electron-better-ipc');
 
-// Раскрытие стандартного IPC (для базовых команд, таких как закрытие окна)
-contextBridge.exposeInMainWorld('ipcRenderer', {
-    send: (channel, data) => ipcRenderer.send(channel, data),
-    on: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args)),
+contextBridge.exposeInMainWorld('electronAPI', {
+  login: (data) => ipcRenderer.send('login', data),
+  register: (data) => ipcRenderer.send('register', data),
+  minimizeWindow: () => ipcRenderer.send('minimize-window'),
+  maximizeWindow: () => ipcRenderer.send('maximize-window'),
+  closeWindow: () => ipcRenderer.send('close-window'),
+  launchGame: (data) => ipcRenderer.send('launch-game', data)
 });
 
-// Раскрытие electron-better-ipc (для обмена сложными данными, таких как прогресс)
-contextBridge.exposeInMainWorld('ipcRendererBetter', ipcRendererBetter);
+ipcRenderer.on('login-failed', (event, message) => {
+    alert(`Ошибка входа: ${message}`);
+});
+
+ipcRenderer.on('register-success', (event, message) => {
+    alert(message);
+});
+
+ipcRenderer.on('register-failed', (event, message) => {
+    alert(`Ошибка регистрации: ${message}`);
+});

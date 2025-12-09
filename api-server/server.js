@@ -28,6 +28,9 @@ const pendingTgLogins = {};
 // Значение: { username: Никнейм, chatId: Chat ID, tgUsername: @ник } (после верификации ботом)
 const pendingTgLoginsByChatId = {};
 
+// --- ХРАНИЛИЩЕ ДАННЫХ ПОЛЬЗОВАТЕЛЕЙ (ВРЕМЕННОЕ) ---
+const users = {}; // { username: { password: 'hashed_password' } }
+
 
 // --- ЛОГИКА ОБРАБОТКИ СООБЩЕНИЙ ОТ TELEGRAM ---
 if (bot) {
@@ -193,6 +196,37 @@ app.post('/api/auth/poll_login', (req, res) => {
         message: 'Ожидание подтверждения от Telegram...',
         status: 'pending' 
     });
+});
+
+// --- 5. Маршрут: Регистрация нового пользователя ---
+app.post('/api/auth/register', (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: 'Имя пользователя и пароль обязательны.' });
+    }
+    if (users[username]) {
+        return res.status(409).json({ success: false, message: 'Пользователь с таким именем уже существует.' });
+    }
+    // В реальном приложении пароль нужно хешировать!
+    users[username] = { password: password };
+    console.log(`[AUTH] Пользователь зарегистрирован: ${username}`);
+    return res.json({ success: true, message: 'Регистрация успешна.' });
+});
+
+// --- 6. Маршрут: Вход существующего пользователя ---
+app.post('/api/auth/login', (req, res) => {
+    const { username, password } = req.body;
+    const user = users[username];
+    if (!user) {
+        return res.status(401).json({ success: false, message: 'Неверное имя пользователя или пароль.' });
+    }
+    // В реальном приложении нужно сравнивать хеши паролей!
+    if (user.password !== password) {
+        return res.status(401).json({ success: false, message: 'Неверное имя пользователя или пароль.' });
+    }
+    const authToken = `AUTH-TOKEN-${username}-${Date.now()}`;
+    console.log(`[AUTH] Пользователь вошел в систему: ${username}`);
+    return res.json({ success: true, token: authToken, username: username });
 });
 
 

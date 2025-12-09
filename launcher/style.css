@@ -86,6 +86,29 @@ body::after {
 
 
 /* --- ЛОГОТИП --- */
+/* --- ЭЛЕМЕНТЫ УПРАВЛЕНИЯ ОКНОМ --- */
+.window-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 2000;
+    display: flex;
+    gap: 10px;
+}
+.window-btn {
+    background: transparent;
+    border: none;
+    color: #e0e0e0;
+    cursor: pointer;
+    padding: 10px;
+}
+.window-btn:hover {
+    color: #fff;
+}
+.close-btn-win:hover {
+    color: #ff416c;
+}
+
 .logo-container {
     position: fixed;
     top: 40px;
@@ -329,11 +352,10 @@ body::after {
 }
 
 .play-btn:hover {
-    transform: translateY(-6px) translateX(-50%);
     box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
 }
 .play-btn:active {
-    transform: translateY(-2px) translateX(-50%);
+    transform: translateX(-50%) scale(0.98);
 }
 
 
@@ -630,6 +652,125 @@ body::after {
         opacity: 1;
         transform: translateX(0);
     }
+}
+
+/* --- СТИЛИ НАСТРОЕК --- */
+.settings-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+.toggle-switch .toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+.toggle-input:checked + .toggle-label {
+    background-color: #667eea;
+}
+.toggle-input:checked + .toggle-label:before {
+    transform: translateX(26px);
+}
+.slider {
+    -webkit-appearance: none;
+    width: 50%;
+    height: 10px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+    border-radius: 5px;
+}
+.slider:hover {
+    opacity: 1;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #667eea;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #667eea;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.recommendation {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 20px;
+    border-radius: 14px;
+}
+.recommendation i {
+    color: #a7b3ff;
+}
+.recommendation p {
+    color: #c0c0c0;
+    font-size: 14px;
+}
+
+/* --- ТЕМЫ --- */
+body.dark-theme {
+    background-color: #0c0a1a;
+    color: #f0f0f0;
+}
+body:not(.dark-theme) {
+    background-color: #f0f0f0;
+    color: #333;
+}
+body:not(.dark-theme) .glass-effect {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+body:not(.dark-theme) h1 {
+    background: linear-gradient(135deg, #333 0%, #777 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+body:not(.dark-theme) .text-btn, body:not(.dark-theme) .left-btn, body:not(.dark-theme) .settings-btn-bottom {
+    color: #333;
 }
 
 /* --- АДАПТИВНОСТЬ --- */
