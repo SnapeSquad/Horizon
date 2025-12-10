@@ -1,0 +1,848 @@
+/* --- ГЛОБАЛЬНЫЕ СТИЛИ --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #0c0a1a;
+    color: #f0f0f0;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* --- ФОНОВЫЕ ЭФФЕКТЫ --- */
+body::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -20%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(118, 75, 162, 0.3), transparent 70%);
+    filter: blur(150px);
+    z-index: -1;
+    animation: background-pan 25s infinite alternate;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    right: -20%;
+    width: 60%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.3), transparent 70%);
+    filter: blur(150px);
+    z-index: -1;
+    animation: background-pan-2 30s infinite alternate;
+}
+
+@keyframes background-pan {
+    from { transform: translate(-10%, 10%); }
+    to { transform: translate(10%, -10%); }
+}
+
+@keyframes background-pan-2 {
+    from { transform: translate(10%, -10%); }
+    to { transform: translate(-10%, 10%); }
+}
+
+
+/* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+.container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(50px);
+}
+
+/* Удаляем старые цветные колонки */
+.color-columns { display: none; }
+
+/* --- ОБЩИЙ СТИЛЬ ДЛЯ "СТЕКЛЯННЫХ" ЭЛЕМЕНТОВ --- */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.glass-effect:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25);
+}
+
+
+/* --- ЛОГОТИП --- */
+/* --- ЭЛЕМЕНТЫ УПРАВЛЕНИЯ ОКНОМ --- */
+.window-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 2000;
+    display: flex;
+    gap: 10px;
+}
+.window-btn {
+    background: transparent;
+    border: none;
+    color: #e0e0e0;
+    cursor: pointer;
+    padding: 10px;
+}
+.window-btn:hover {
+    color: #fff;
+}
+.close-btn-win:hover {
+    color: #ff416c;
+}
+
+.logo-container {
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    z-index: 1000;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.1);
+}
+
+
+/* --- КНОПКИ (ОБЩИЕ СТИЛИ) --- */
+.btn {
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- ЛЕВЫЕ КНОПКИ --- */
+.left-buttons {
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 100;
+}
+
+.left-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    font-size: 24px;
+    color: #e0e0e0;
+}
+
+.left-btn:hover {
+    transform: translateY(-4px);
+    color: #fff;
+}
+
+.left-btn.active {
+    background: rgba(102, 126, 234, 0.3);
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+/* --- ВЕРХНИЕ КНОПКИ (Форум, О нас, Магазин) --- */
+.column-buttons {
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    gap: 20px; 
+    z-index: 100;
+}
+
+.text-btn {
+    padding: 12px 28px;
+    height: 50px;
+    font-size: 16px;
+    color: #e0e0e0;
+}
+.text-btn:hover {
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+/* --- ОСНОВНОЙ КОНТЕНТ --- */
+.main-content {
+    text-align: center;
+}
+
+.main-content h1 {
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #e0e0e0 0%, #a7b3ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 40px;
+}
+
+/* --- АНИМАЦИИ СТРАНИЦ --- */
+.page {
+    display: none;
+    animation: fade-out 0.4s ease-in-out forwards;
+}
+.page.active {
+    display: block;
+    animation: fade-in 0.4s ease-in-out forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Карточки (Приветствие, Статус сервера) */
+.welcome-card, .server-status, .section-header {
+    padding: 30px 40px;
+    border-radius: 24px;
+    max-width: 500px;
+    margin: 20px auto;
+    animation: card-appear 0.5s ease-in-out backwards;
+}
+.welcome-card { animation-delay: 0.1s; }
+.server-status { animation-delay: 0.2s; }
+
+@keyframes card-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+.welcome-card h2, .server-status h3, .section-header h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.welcome-card h2 i, .server-status h3 i, .section-header h2 i {
+    color: #a7b3ff;
+}
+
+.welcome-card p, .section-header p {
+    font-size: 16px;
+    color: #c0c0c0;
+    line-height: 1.6;
+}
+
+.server-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    padding: 8px 0;
+}
+.label { color: #c0c0c0; }
+.value { font-weight: 700; color: #fff; }
+
+
+/* --- НИЖНИЕ КНОПКИ (Настройки, Играть) --- */
+.settings-button-container {
+    position: fixed;
+    bottom: 40px;
+    left: 40px;
+    z-index: 100;
+}
+
+.settings-btn-bottom {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    font-size: 24px;
+    color: #e0e0e0;
+}
+.settings-btn-bottom:hover {
+    transform: translateY(-4px) rotate(45deg);
+    color: #fff;
+}
+
+.play-button-container {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.play-btn {
+    width: 280px;
+    height: 70px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+}
+
+.play-btn:hover {
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+.play-btn:active {
+    transform: translateX(-50%) scale(0.98);
+}
+
+
+/* --- МОДАЛЬНОЕ ОКНО ГАРДЕРОБА --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(12, 10, 26, 0.5);
+    z-index: 2000;
+    display: none; /* Управляется JS */
+    justify-content: center;
+    align-items: center;
+    animation: modal-background-fade-in 0.4s ease;
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+    border-radius: 24px;
+    width: 90%;
+    max-width: 1200px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    animation: modal-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modal-background-fade-in {
+    from { background: rgba(12, 10, 26, 0); }
+    to { background: rgba(12, 10, 26, 0.5); }
+}
+
+@keyframes modal-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.modal-header {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #e0e0e0;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.close-btn:hover {
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.wardrobe-body {
+    display: flex;
+    flex: 1;
+    padding: 24px 32px;
+    gap: 30px;
+    overflow: hidden;
+}
+
+.clothes-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+.preview-section {
+    flex: 1;
+}
+
+.category-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.category-tab {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #c0c0c0;
+}
+.category-tab.active {
+    background: rgba(102, 126, 234, 0.3);
+    color: #fff;
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+.clothes-list-container {
+    flex: 1;
+    padding: 16px;
+    border-radius: 18px;
+    overflow-y: auto;
+}
+.clothes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.clothing-item {
+    padding: 16px;
+    border-radius: 14px;
+    text-align: center;
+    color: #e0e0e0;
+}
+.clothing-item i { font-size: 24px; margin-bottom: 8px; }
+.clothing-item.selected {
+    background: rgba(102, 126, 234, 0.3);
+    color: #fff;
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+.character-preview {
+    padding: 20px;
+    border-radius: 18px;
+    height: 100%;
+}
+.character-model {
+    height: 300px; /* Увеличено для лучшего вида */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.character {
+    width: 100px;
+    height: 180px;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+    position: relative;
+}
+
+/* --- Стили для восстановленных элементов --- */
+.search-container {
+    padding: 20px 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.search-box {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+}
+.search-box i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+.search-box input {
+    width: 100%;
+    padding: 14px 20px 14px 50px;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+}
+.search-box input:focus {
+    outline: none;
+    background: rgba(0,0,0,0.3);
+}
+
+.rotation-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+.rotation-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #c0c0c0;
+}
+.rotate-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+}
+
+.character-head,
+.character-body,
+.character-legs,
+.character-shoes {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #8B4513;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.character-head {
+    width: 50px;
+    height: 50px;
+    top: 15px;
+}
+
+.character-body {
+    width: 70px;
+    height: 70px;
+    top: 75px;
+    background: #4682B4;
+}
+
+.character-legs {
+    width: 60px;
+    height: 50px;
+    top: 155px;
+    background: #32CD32;
+}
+
+.character-shoes {
+    width: 65px;
+    height: 18px;
+    top: 215px;
+    background: #333;
+}
+
+/* --- УВЕДОМЛЕНИЯ И ОШИБКИ --- */
+.notification.error, .notification.success {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 28px;
+    border-radius: 16px;
+    font-weight: 600;
+    z-index: 3000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: notification-appear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes notification-appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) translateX(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) translateX(-50%);
+    }
+}
+
+
+.notification {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+.error-message {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    bottom: auto;
+    top: 40px;
+    transform: translateX(0); /* Сброс для ошибки */
+    animation: error-appear 0.4s ease-in-out forwards;
+}
+
+@keyframes error-appear {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* --- СТИЛИ НАСТРОЕК --- */
+.settings-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+.toggle-switch .toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+.toggle-label:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+.toggle-input:checked + .toggle-label {
+    background-color: #667eea;
+}
+.toggle-input:checked + .toggle-label:before {
+    transform: translateX(26px);
+}
+.slider {
+    -webkit-appearance: none;
+    width: 50%;
+    height: 10px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+    border-radius: 5px;
+}
+.slider:hover {
+    opacity: 1;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #667eea;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #667eea;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.recommendation {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 20px;
+    border-radius: 14px;
+}
+.recommendation i {
+    color: #a7b3ff;
+}
+.recommendation p {
+    color: #c0c0c0;
+    font-size: 14px;
+}
+.select-box {
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+    border: none;
+}
+
+/* --- ТЕМЫ --- */
+body.dark-theme {
+    background-color: #0c0a1a;
+    color: #f0f0f0;
+}
+body:not(.dark-theme) {
+    background-color: #f0f0f0;
+    color: #333;
+}
+body:not(.dark-theme) .glass-effect {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+body:not(.dark-theme) h1 {
+    background: linear-gradient(135deg, #333 0%, #777 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+body:not(.dark-theme) .text-btn, body:not(.dark-theme) .left-btn, body:not(.dark-theme) .settings-btn-bottom {
+    color: #333;
+}
+
+/* --- АДАПТИВНОСТЬ --- */
+@media (max-width: 1200px) {
+    .wardrobe-body {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .preview-section {
+        width: 100%;
+        flex-direction: row;
+        gap: 25px;
+    }
+    
+    .character-preview {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .left-buttons {
+        left: 20px;
+        gap: 15px;
+    }
+    .left-btn {
+        width: 60px;
+        height: 60px;
+    }
+    .main-content h1 {
+        font-size: 3rem;
+    }
+    .text-btn {
+        padding: 10px 20px;
+        height: 44px;
+        font-size: 14px;
+    }
+    .play-btn {
+        width: 220px;
+        height: 60px;
+        font-size: 18px;
+    }
+    .settings-button-container {
+        left: 20px;
+        bottom: 20px;
+    }
+    .settings-btn-bottom {
+        width: 60px;
+        height: 60px;
+    }
+    .column-buttons {
+        gap: 10px;
+    }
+    .modal-content {
+        width: 95%;
+        height: 90vh;
+    }
+    .wardrobe-body {
+        padding: 15px;
+    }
+    .category-tabs {
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    .preview-section {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon Launcher</title>
+    <!-- Подключение библиотеки иконок Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Подключение обновленного CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Элементы управления окном -->
+    <div class="window-controls">
+        <button id="minimize-btn" class="window-btn"><i data-lucide="minus"></i></button>
+        <button id="maximize-btn" class="window-btn"><i data-lucide="square"></i></button>
+        <button id="close-btn-win" class="window-btn close-btn-win"><i data-lucide="x"></i></button>
+    </div>
+
+    <!-- Логотип -->
+    <div class="logo-container">
+        <div class="logo glass-effect">
+            <img src="https://i.pinimg.com/originals/8e/19/8a/8e198a2393ac46c0854e9252f7c24583.jpg" alt="Minecraft Logo">
+        </div>
+    </div>
+
+    <!-- Основной контейнер -->
+    <div class="container">
+        <!-- Кнопки слева -->
+        <div class="left-buttons">
+            <button class="left-btn btn glass-effect" id="main-btn" title="Главная">
+                <i data-lucide="home"></i>
+            </button>
+            <button class="left-btn btn glass-effect" id="servers-btn" title="Серверы">
+                <i data-lucide="server"></i>
+            </button>
+            <button class="left-btn btn glass-effect" id="wardrobe-btn" title="Гардероб">
+                <i data-lucide="shirt"></i>
+            </button>
+        </div>
+
+        <!-- Кнопки вверху -->
+        <div class="column-buttons">
+            <button class="text-btn btn glass-effect" id="forum-btn">Форум</button>
+            <button class="text-btn btn glass-effect" id="about-btn">О нас</button>
+            <button class="text-btn btn glass-effect" id="shop-btn">Магазин</button>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="main-content">
+            <h1>Horizon</h1>
+            
+            <!-- Главная страница -->
+            <div id="main-page" class="page active">
+                <div class="welcome-card glass-effect">
+                    <h2><i data-lucide="gem"></i> Добро пожаловать!</h2>
+                    <p>Выберите раздел в меню слева или начните игру.</p>
+                </div>
+                <div class="server-status glass-effect">
+                    <h3><i data-lucide="activity"></i> Статус сервера</h3>
+                    <div class="server-info">
+                        <div class="info-row">
+                            <span class="label">Сервер:</span>
+                            <span class="value">Horizon World</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Версия:</span>
+                            <span class="value">1.20.1</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Игроки:</span>
+                            <span class="value">124/200</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Страница серверов -->
+            <div id="servers-page" class="page">
+                <div class="section-header glass-effect">
+                    <h2><i data-lucide="server"></i> Список серверов</h2>
+                    <p>Выберите сервер для подключения.</p>
+                </div>
+            </div>
+            
+            <!-- Страница гардероба (контент теперь в модальном окне) -->
+            <div id="wardrobe-page" class="page">
+                <div class="section-header glass-effect">
+                    <h2><i data-lucide="shirt"></i> Гардероб</h2>
+                    <p>Настройте внешний вид своего персонажа.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка Настройки -->
+        <div class="settings-button-container">
+            <button class="settings-btn-bottom btn glass-effect" id="settings-btn-bottom" title="Настройки">
+                <i data-lucide="settings"></i>
+            </button>
+        </div>
+
+        <!-- Кнопка ИГРАТЬ -->
+        <div class="play-button-container">
+            <button id="play-btn" class="play-btn btn">
+                ИГРАТЬ
+            </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно гардероба -->
+    <div id="wardrobe-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="shirt"></i>
+                    <h2>Гардероб персонажа</h2>
+                </div>
+                <button class="close-btn">&times;</button>
+            </div>
+            <!-- Поисковая строка -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i data-lucide="search"></i>
+                    <input type-="text" id="search-clothes" placeholder="Поиск одежды...">
+                </div>
+            </div>
+            <div class="wardrobe-body">
+                <!-- Секция выбора -->
+                <div class="clothes-section">
+                    <div class="category-tabs">
+                        <button class="category-tab btn glass-effect active" data-category="head"><i data-lucide="user-round"></i><span>Голова</span></button>
+                        <button class="category-tab btn glass-effect" data-category="body"><i data-lucide="shirt"></i><span>Тело</span></button>
+                        <button class="category-tab btn glass-effect" data-category="legs"><i data-lucide="person-standing"></i><span>Ноги</span></button>
+                        <button class="category-tab btn glass-effect" data-category="shoes"><i data-lucide="footprints"></i><span>Обувь</span></button>
+                        <button class="category-tab btn glass-effect" data-category="accessories"><i data-lucide="gem"></i><span>Аксессуары</span></button>
+                    </div>
+                    <div class="clothes-list-container glass-effect">
+                        <div id="clothes-list" class="clothes-list">
+                            <!-- Динамически заполняется JS -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Секция предпросмотра -->
+                <div class="preview-section">
+                     <div class="character-preview glass-effect">
+                        <div class="character-model">
+                            <div class="character" id="character">
+                                <div class="character-head"></div>
+                                <div class="character-body"></div>
+                                <div class="character-legs"></div>
+                                <div class="character-shoes"></div>
+                            </div>
+                        </div>
+                        <!-- Управление вращением -->
+                        <div class="rotation-controls">
+                            <button id="rotate-left" class="rotate-btn btn glass-effect">
+                                <i data-lucide="rotate-ccw"></i>
+                            </button>
+                            <div class="rotation-label">
+                                <i data-lucide="mouse"></i>
+                                <span>Повернуть</span>
+                            </div>
+                            <button id="rotate-right" class="rotate-btn btn glass-effect">
+                                <i data-lucide="rotate-cw"></i>
+                            </button>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Инициализация иконок Lucide
+        lucide.createIcons();
+    </script>
+
+    <!-- Модальное окно настроек -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="settings"></i>
+                    <h2>Настройки</h2>
+                </div>
+                <button id="close-settings-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="settings-body">
+                <div class="setting-item">
+                    <label for="theme-toggle">Темная тема</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="theme-toggle" class="toggle-input">
+                        <label for="theme-toggle" class="toggle-label"></label>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label for="ram-slider">Выделенная ОЗУ: <span id="ram-value">4</span> ГБ</label>
+                    <input type="range" id="ram-slider" min="2" max="16" value="4" class="slider">
+                </div>
+                <div class="setting-item">
+                    <label for="version-select">Версия игры</label>
+                    <select id="version-select" class="select-box">
+                        <option value="1.17.1">1.17.1</option>
+                        <option value="1.18.2">1.18.2</option>
+                        <option value="1.19.4">1.19.4</option>
+                    </select>
+                </div>
+                <div class="setting-item recommendation">
+                    <i data-lucide="shield-check"></i>
+                    <div>
+                        <strong>Защитите свой аккаунт</strong>
+                        <p>Включите двухфакторную аутентификацию (2FA) через Telegram или Google Authenticator для максимальной безопасности.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

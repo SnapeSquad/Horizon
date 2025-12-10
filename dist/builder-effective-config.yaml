@@ -1,0 +1,14 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.horizon.launcher
+productName: HorizonLauncher
+win:
+  target: nsis
+  icon: launcher/icon.ico
+publish:
+  - provider: github
+    owner: SnapeSquad
+    repo: Horizon-Launcher
+files: []
+electronVersion: 28.2.2

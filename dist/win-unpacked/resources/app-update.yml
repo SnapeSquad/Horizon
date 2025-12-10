@@ -1,0 +1,4 @@
+owner: SnapeSquad
+repo: Horizon-Launcher
+provider: github
+updaterCacheDirName: horizon-launcher-updater
