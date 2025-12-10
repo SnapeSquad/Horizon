@@ -117,9 +117,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // --- ОБНОВЛЕННАЯ ЛОГИКА КНОПКИ "ИГРАТЬ" ---
+        let authData = {};
+        window.electronAPI.onLoginSuccess((data) => {
+            authData = data;
+        });
+
         elements.playBtn.addEventListener('click', () => {
             const ram = document.getElementById('ram-slider').value;
-            window.electronAPI.launchGame({ ram });
+            const version = document.getElementById('version-select').value;
+            window.electronAPI.launchGame({ ram, version, ...authData });
         });
 
         // Закрытие модального окна гардероба
@@ -153,6 +159,17 @@ document.addEventListener('DOMContentLoaded', function() {
             rotateLeftBtn.addEventListener('click', () => rotateCharacter(-45));
             rotateRightBtn.addEventListener('click', () => rotateCharacter(45));
         }
+
+        // --- УПРАВЛЕНИЕ ОКНОМ ---
+        document.getElementById('minimize-btn')?.addEventListener('click', () => {
+            window.electronAPI.minimizeWindow();
+        });
+        document.getElementById('maximize-btn')?.addEventListener('click', () => {
+            window.electronAPI.maximizeWindow();
+        });
+        document.getElementById('close-btn-win')?.addEventListener('click', () => {
+            window.electronAPI.closeWindow();
+        });
 
         // Настройки
         const settingsModal = document.getElementById('settings-modal');
