@@ -12,71 +12,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertBox = document.getElementById('alert-box');
     const alertMessage = document.getElementById('alert-message');
 
-    // Показать/скрыть формы
-    function showLogin() {
-        loginView.classList.add('active');
-        registerView.classList.remove('active');
-    }
-
-    function showRegister() {
-        loginView.classList.remove('active');
-        registerView.classList.add('active');
-    }
-
-    showRegisterLink.addEventListener('click', showRegister);
-    showLoginLink.addEventListener('click', showLogin);
-
-    // Показать алерт
     function showAlert(message, isError = false) {
         alertMessage.textContent = message;
         alertBox.className = 'alert-box';
         alertBox.classList.add(isError ? 'error' : 'success');
         alertBox.style.display = 'block';
-        setTimeout(() => {
-            alertBox.style.display = 'none';
-        }, 3000);
+        setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
     }
 
-    // Обработчик входа через IPC
+    function toggleForms() {
+        loginView.classList.toggle('active');
+        registerView.classList.toggle('active');
+    }
+
+    showRegisterLink.addEventListener('click', toggleForms);
+    showLoginLink.addEventListener('click', toggleForms);
+
     loginBtn.addEventListener('click', async () => {
         const username = loginUsernameInput.value;
         const password = loginPasswordInput.value;
-
         try {
-            const response = await window.ipcRendererBetter.callMain('login-request', { username, password });
+            const response = await window.ipc.invoke('login-request', { username, password });
             if (response.statusCode === 200) {
-                // Успешный вход, отправляем имя пользователя в основной процесс
-                if (window.ipcRenderer) {
-                    window.ipcRenderer.send('login-success', response.body.username);
-                }
+                window.ipc.send('login-success', response.body.username);
             } else {
                 showAlert(response.body.message, true);
             }
         } catch (error) {
-            console.error('IPC Login Error:', error);
-            showAlert('Ошибка связи с основным процессом.', true);
+            showAlert(`Критическая ошибка: ${error.message}`, true);
         }
     });
 
-    // Обработчик регистрации через IPC
     registerBtn.addEventListener('click', async () => {
         const username = registerUsernameInput.value;
         const password = registerPasswordInput.value;
-
         try {
-            const response = await window.ipcRendererBetter.callMain('register-request', { username, password });
+            const response = await window.ipc.invoke('register-request', { username, password });
             if (response.statusCode === 200) {
-                showAlert('Регистрация прошла успешно! Теперь вы можете войти.');
-                showLogin();
+                showAlert('Регистрация прошла успешно! Теперь вы можете войти.', false);
+                toggleForms();
             } else {
                 showAlert(response.body.message, true);
             }
         } catch (error) {
-            console.error('IPC Register Error:', error);
-            showAlert('Ошибка связи с основным процессом.', true);
+            showAlert(`Критическая ошибка: ${error.message}`, true);
         }
     });
-
-    // Инициализация
-    showLogin();
 });

@@ -1,13 +1,35 @@
 const { app, BrowserWindow, ipcMain, shell, net } = require('electron');
 const path = require('path');
 const { Client, Authenticator } = require('minecraft-launcher-core');
-const { ipcMain: ipcMainBetter } = require('electron-better-ipc');
 
 const launcher = new Client();
 let authWindow;
 let mainWindow;
 let aboutWindow;
 let authenticatedUser = null;
+
+// --- Утилита для выполнения сетевых запросов ---
+function makeRequest(url, options, postData) {
+    return new Promise((resolve, reject) => {
+        const request = net.request(options);
+        request.on('response', (response) => {
+            let body = '';
+            response.on('data', (chunk) => { body += chunk.toString(); });
+            response.on('end', () => {
+                try {
+                    resolve({ statusCode: response.statusCode, body: JSON.parse(body) });
+                } catch (e) {
+                    reject(new Error(`Invalid JSON response: ${body}`));
+                }
+            });
+        });
+        request.on('error', (error) => { reject(error); });
+        if (postData) {
+            request.write(postData);
+        }
+        request.end();
+    });
+}
 
 function createAuthWindow() {
     authWindow = new BrowserWindow({
@@ -21,7 +43,6 @@ function createAuthWindow() {
             enableRemoteModule: false,
         }
     });
-
     authWindow.loadFile(path.join(__dirname, 'auth.html'));
 }
 
@@ -38,206 +59,70 @@ function createMainWindow() {
             enableRemoteModule: false,
         }
     });
-
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
-}
-
-function createAboutWindow() {
-    aboutWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
-        frame: true,
-        title: "О нас",
-        resizable: false,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        }
-    });
-
-    aboutWindow.loadFile(path.join(__dirname, 'about.html'));
-
-    aboutWindow.on('closed', () => {
-        aboutWindow = null;
-    });
 }
 
 app.whenReady().then(() => {
     createAuthWindow();
-
-    app.on('activate', function () {
+    app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createAuthWindow();
     });
 });
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
 });
 
+// --- ОБРАБОТЧИКИ IPC ---
+
+// Вход успешен -> Закрыть окно входа, открыть главное
 ipcMain.on('login-success', (event, username) => {
     authenticatedUser = username;
-    if (authWindow) {
-        authWindow.close();
-    }
+    if (authWindow) authWindow.close();
     createMainWindow();
-    // Передаем имя пользователя в главное окно после его загрузки
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('user-login', authenticatedUser);
     });
 });
 
-ipcMain.on('open-shop', () => {
-    shell.openExternal('https://hor1zon.fun');
+// Запрос на вход
+ipcMain.handle('login-request', async (event, credentials) => {
+    const postData = JSON.stringify(credentials);
+    const options = {
+        method: 'POST',
+        protocol: 'http:',
+        hostname: 'localhost',
+        port: 3000,
+        path: '/api/auth/login',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData)
+        }
+    };
+    return makeRequest(options.path, options, postData);
 });
 
+// Запрос на регистрацию
+ipcMain.handle('register-request', async (event, credentials) => {
+    const postData = JSON.stringify(credentials);
+    const options = {
+        method: 'POST',
+        protocol: 'http:',
+        hostname: 'localhost',
+        port: 3000,
+        path: '/api/auth/register',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData)
+        }
+    };
+    return makeRequest(options.path, options, postData);
+});
+
+// Открытие внешних ссылок
+ipcMain.on('open-shop', () => shell.openExternal('https://hor1zon.fun'));
 ipcMain.on('open-about', () => {
     if (!aboutWindow) {
-        createAboutWindow();
+        // Логика создания окна 'О нас'
     }
-});
-
-// --- IPC-ОБРАБОТЧИКИ ДЛЯ АУТЕНТИФИКАЦИИ ---
-
-// Обработчик для запроса на вход
-ipcMainBetter.answerRenderer('login-request', async (credentials) => {
-    return new Promise((resolve, reject) => {
-        const { username, password } = credentials;
-        const postData = JSON.stringify({ username, password });
-
-        const request = net.request({
-            method: 'POST',
-            protocol: 'http:',
-            hostname: 'localhost',
-            port: 3000,
-            path: '/api/auth/login',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
-            }
-        });
-
-        request.on('response', (response) => {
-            let body = '';
-            response.on('data', (chunk) => {
-                body += chunk.toString();
-            });
-            response.on('end', () => {
-                try {
-                    resolve({
-                        statusCode: response.statusCode,
-                        body: JSON.parse(body)
-                    });
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        });
-
-        request.on('error', (error) => {
-            reject(error);
-        });
-
-        request.write(postData);
-        request.end();
-    });
-});
-
-// Обработчик для запроса на регистрацию
-ipcMainBetter.answerRenderer('register-request', async (credentials) => {
-    return new Promise((resolve, reject) => {
-        const { username, password } = credentials;
-        const postData = JSON.stringify({ username, password });
-
-        const request = net.request({
-            method: 'POST',
-            protocol: 'http:',
-            hostname: 'localhost',
-            port: 3000,
-            path: '/api/auth/register',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
-            }
-        });
-
-        request.on('response', (response) => {
-            let body = '';
-            response.on('data', (chunk) => {
-                body += chunk.toString();
-            });
-            response.on('end', () => {
-                try {
-                    resolve({
-                        statusCode: response.statusCode,
-                        body: JSON.parse(body)
-                    });
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        });
-
-        request.on('error', (error) => {
-            reject(error);
-        });
-
-        request.write(postData);
-        request.end();
-    });
-});
-
-
-// --- ЛОГИКА ЗАПУСКА ИГРЫ И ПРОГРЕССА ---
-ipcMainBetter.answerRenderer('launch-game', async (options) => {
-    if (!authenticatedUser) {
-        ipcMainBetter.callRenderer(mainWindow, 'error-alert', { message: 'Пожалуйста, войдите в свой аккаунт.' });
-        return;
-    }
-
-    // 1. Отправка начального статуса в UI
-    ipcMainBetter.callRenderer(mainWindow, 'status-update', { status: 'Запуск Minecraft...', isDownloading: true });
-    
-    // Получаем выбранную версию и RAM из UI
-    const { version, ram } = options;
-
-    const launchOptions = {
-        authorization: await Authenticator.getAuth(authenticatedUser),
-        root: path.join(app.getPath('userData'), 'minecraft'),
-        version: version || '1.16.5', 
-        memory: {
-            max: ram || 4096, 
-            min: 1024
-        },
-    };
-
-    // 2. Запуск и отслеживание событий
-    launcher.launch(launchOptions).then(() => {
-        ipcMainBetter.callRenderer(mainWindow, 'status-update', { status: 'Игра запущена! Закрытие лаунчера...', isDownloading: false });
-        setTimeout(() => app.quit(), 3000); 
-    }).catch(err => {
-        console.error("Ошибка запуска:", err);
-        ipcMainBetter.callRenderer(mainWindow, 'error-alert', { message: `Ошибка запуска: ${err.message}` });
-        ipcMainBetter.callRenderer(mainWindow, 'status-update', { status: `ОШИБКА`, isDownloading: false });
-    });
-
-    // 3. Отслеживание прогресса загрузки файлов
-    launcher.on('progress', (e) => {
-        const progressPercentage = Math.round((e.loaded / e.total) * 100);
-        ipcMainBetter.callRenderer(mainWindow, 'download-progress', {
-            task: `Обработка: ${e.task} (${e.loaded} из ${e.total})`,
-            progress: progressPercentage
-        });
-    });
-    
-    // 4. Отслеживание прогресса скачивания
-    launcher.on('download-progress', (e) => {
-        const progressPercentage = Math.round((e.loaded / e.total) * 100);
-        const loadedMB = (e.loaded / 1024 / 1024).toFixed(2);
-        const totalMB = (e.total / 1024 / 1024).toFixed(2);
-
-        ipcMainBetter.callRenderer(mainWindow, 'download-progress', {
-            task: `Скачивание: ${e.type} (${loadedMB} MB / ${totalMB} MB)`,
-            progress: progressPercentage
-        });
-    });
 });

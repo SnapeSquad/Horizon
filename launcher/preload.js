@@ -1,13 +1,16 @@
 const { contextBridge, ipcRenderer } = require('electron');
-const { ipcRenderer: ipcRendererBetter } = require('electron-better-ipc');
 
-// Раскрытие стандартного IPC (для базовых команд, таких как закрытие окна)
-contextBridge.exposeInMainWorld('ipcRenderer', {
-    send: (channel, data) => ipcRenderer.send(channel, data),
-    on: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args)),
-});
-
-// Раскрытие electron-better-ipc (для обмена сложными данными, таких как прогресс)
-contextBridge.exposeInMainWorld('ipcRendererBetter', {
-    callMain: (channel, data) => ipcRendererBetter.callMain(channel, data)
+contextBridge.exposeInMainWorld('ipc', {
+    // Односторонний канал (от рендерера к главному)
+    send: (channel, data) => {
+        ipcRenderer.send(channel, data);
+    },
+    // Двусторонний канал (рендер -> главный -> рендер)
+    invoke: (channel, data) => {
+        return ipcRenderer.invoke(channel, data);
+    },
+    // Односторонний канал (от главного к рендереру)
+    on: (channel, func) => {
+        ipcRenderer.on(channel, (event, ...args) => func(...args));
+    }
 });
