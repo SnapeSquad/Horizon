@@ -193,6 +193,12 @@ app.post('/api/auth/login', (req, res) => {
             return res.status(401).json({ success: false, message: 'Неверный логин или пароль.' });
         }
 
+        // --- ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ ДЛЯ ДИАГНОСТИКИ ---
+        console.log(`[DEBUG] Сравнение паролей для пользователя: ${username}`);
+        console.log(`[DEBUG]   - Пароль из запроса: ${password}`);
+        console.log(`[DEBUG]   - Хэш из файла: ${user.password}`);
+        // ------------------------------------------
+
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) {
                 console.error('[LOGIN] Ошибка сравнения пароля:', err);

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, net } = require('electron');
 const path = require('path');
 const { Client, Authenticator } = require('minecraft-launcher-core');
 const { ipcMain: ipcMainBetter } = require('electron-better-ipc');
@@ -95,6 +95,97 @@ ipcMain.on('open-about', () => {
         createAboutWindow();
     }
 });
+
+// --- IPC-ОБРАБОТЧИКИ ДЛЯ АУТЕНТИФИКАЦИИ ---
+
+// Обработчик для запроса на вход
+ipcMainBetter.answerRenderer('login-request', async (credentials) => {
+    return new Promise((resolve, reject) => {
+        const { username, password } = credentials;
+        const postData = JSON.stringify({ username, password });
+
+        const request = net.request({
+            method: 'POST',
+            protocol: 'http:',
+            hostname: 'localhost',
+            port: 3000,
+            path: '/api/auth/login',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(postData)
+            }
+        });
+
+        request.on('response', (response) => {
+            let body = '';
+            response.on('data', (chunk) => {
+                body += chunk.toString();
+            });
+            response.on('end', () => {
+                try {
+                    resolve({
+                        statusCode: response.statusCode,
+                        body: JSON.parse(body)
+                    });
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+
+        request.on('error', (error) => {
+            reject(error);
+        });
+
+        request.write(postData);
+        request.end();
+    });
+});
+
+// Обработчик для запроса на регистрацию
+ipcMainBetter.answerRenderer('register-request', async (credentials) => {
+    return new Promise((resolve, reject) => {
+        const { username, password } = credentials;
+        const postData = JSON.stringify({ username, password });
+
+        const request = net.request({
+            method: 'POST',
+            protocol: 'http:',
+            hostname: 'localhost',
+            port: 3000,
+            path: '/api/auth/register',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(postData)
+            }
+        });
+
+        request.on('response', (response) => {
+            let body = '';
+            response.on('data', (chunk) => {
+                body += chunk.toString();
+            });
+            response.on('end', () => {
+                try {
+                    resolve({
+                        statusCode: response.statusCode,
+                        body: JSON.parse(body)
+                    });
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+
+        request.on('error', (error) => {
+            reject(error);
+        });
+
+        request.write(postData);
+        request.end();
+    });
+});
+
 
 // --- ЛОГИКА ЗАПУСКА ИГРЫ И ПРОГРЕССА ---
 ipcMainBetter.answerRenderer('launch-game', async (options) => {
