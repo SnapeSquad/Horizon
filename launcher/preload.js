@@ -8,4 +8,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 });
 
 // Раскрытие electron-better-ipc (для обмена сложными данными, таких как прогресс)
-contextBridge.exposeInMainWorld('ipcRendererBetter', ipcRendererBetter);
+contextBridge.exposeInMainWorld('ipcRendererBetter', {
+    callMain: (channel, data) => ipcRendererBetter.callMain(channel, data)
+});
