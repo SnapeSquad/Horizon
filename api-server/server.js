@@ -8,6 +8,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 // --- ИМПОРТ БИБЛИОТЕКИ MINECRAFT ---
 const mcu = require('minecraft-server-util');
+const cors = require('cors');
 // -----------------------------------
 const app = express();
 const PORT = 3000; 
@@ -90,11 +91,7 @@ if (bot) {
 
 
 app.use(express.json());
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); 
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('API Server запущен и ждет запросов от лаунчера!');
