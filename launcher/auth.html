@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div id="login-view" class="auth-view active">
+            <h2>Вход</h2>
+            <input type="text" id="login-username" placeholder="Имя пользователя">
+            <input type="password" id="login-password" placeholder="Пароль">
+            <button id="login-btn">Войти</button>
+            <p>Нет аккаунта? <a href="#" id="show-register">Регистрация</a></p>
+        </div>
+        <div id="register-view" class="auth-view">
+            <h2>Регистрация</h2>
+            <input type="text" id="register-username" placeholder="Имя пользователя">
+            <input type="password" id="register-password" placeholder="Пароль">
+            <button id="register-btn">Зарегистрироваться</button>
+            <p>Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
+        </div>
+    </div>
+    <div id="alert-box" class="alert-box">
+        <p id="alert-message"></p>
+    </div>
+    <script src="auth.js"></script>
+</body>
+</html>

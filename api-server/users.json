@@ -1,0 +1,14 @@
+[
+  {
+    "username": "testuser",
+    "password": "password123"
+  },
+  {
+    "username": "Test",
+    "password": "$2b$10$xr38LBUC8Xy6pB1j6lsJu.QKOi/gp59aszk81/M8DvnWp5tt3sQ4G"
+  },
+  {
+    "username": "Isya",
+    "password": "$2b$10$gxuXwIL11IrHVyqXMp2uz.9KlrhP8rYAVGa680tganjWAuGEE3JtS"
+  }
+]
