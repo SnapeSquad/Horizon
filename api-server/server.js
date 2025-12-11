@@ -3,11 +3,15 @@ require('dotenv').config();
 
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
+const fs = require('fs');
+const path = require('path');
+const bcrypt = require('bcrypt');
 // --- ИМПОРТ БИБЛИОТЕКИ MINECRAFT ---
 const mcu = require('minecraft-server-util');
 // -----------------------------------
 const app = express();
 const PORT = 3000; 
+const USERS_DB_PATH = path.join(__dirname, 'users.json');
 
 // --- Инициализация Telegram ---
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -130,15 +134,82 @@ app.get('/api/server/status', async (req, res) => {
     }
 });
 
+// --- 2. Маршрут: Регистрация нового пользователя ---
+app.post('/api/auth/register', (req, res) => {
+    const { username, password } = req.body;
 
-// --- 2. Маршрут: Вход по логину/паролю ---
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: 'Логин и пароль обязательны.' });
+    }
+
+    fs.readFile(USERS_DB_PATH, 'utf8', (err, data) => {
+        if (err && err.code !== 'ENOENT') {
+            console.error('[REGISTER] Ошибка чтения файла:', err);
+            return res.status(500).json({ success: false, message: 'Ошибка сервера при чтении базы данных.' });
+        }
+
+        const users = data ? JSON.parse(data) : [];
+
+        if (users.find(user => user.username === username)) {
+            return res.status(409).json({ success: false, message: 'Пользователь с таким именем уже существует.' });
+        }
+
+        bcrypt.hash(password, 10, (err, hashedPassword) => {
+            if (err) {
+                console.error('[REGISTER] Ошибка хэширования пароля:', err);
+                return res.status(500).json({ success: false, message: 'Ошибка сервера при регистрации.' });
+            }
+
+            users.push({ username, password: hashedPassword });
+
+            fs.writeFile(USERS_DB_PATH, JSON.stringify(users, null, 2), (err) => {
+                if (err) {
+                    console.error('[REGISTER] Ошибка записи в файл:', err);
+                    return res.status(500).json({ success: false, message: 'Ошибка сервера при сохранении пользователя.' });
+                }
+                console.log(`[REGISTER] Пользователь ${username} успешно зарегистрирован.`);
+                res.json({ success: true, message: 'Регистрация прошла успешно!' });
+            });
+        });
+    });
+});
+
+
+// --- 3. Маршрут: Вход по логину/паролю ---
 app.post('/api/auth/login', (req, res) => {
     const { username, password } = req.body;
-    if (username === 'test' && password === '123') {
-        return res.json({ success: true, token: 'fake-auth-token-12345', username: 'TestPlayer' });
-    } else {
-        return res.status(401).json({ success: false, message: 'Неверный логин или пароль.' });
+
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: 'Логин и пароль обязательны.' });
     }
+
+    fs.readFile(USERS_DB_PATH, 'utf8', (err, data) => {
+        if (err && err.code !== 'ENOENT') {
+            console.error('[LOGIN] Ошибка чтения файла:', err);
+            return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+        }
+
+        const users = data ? JSON.parse(data) : [];
+        const user = users.find(u => u.username === username);
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'Неверный логин или пароль.' });
+        }
+
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) {
+                console.error('[LOGIN] Ошибка сравнения пароля:', err);
+                return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+            }
+
+            if (isMatch) {
+                console.log(`[LOGIN] Пользователь ${username} успешно вошел в систему.`);
+                res.json({ success: true, token: `fake-auth-token-${Date.now()}`, username: user.username });
+            } else {
+                res.status(401).json({ success: false, message: 'Неверный логин или пароль.' });
+            }
+        });
+    });
 });
 
 
