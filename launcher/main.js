@@ -11,7 +11,7 @@ let authenticatedUser = null;
 // --- Утилита для выполнения сетевых запросов ---
 function makeRequest(url, options, postData) {
     return new Promise((resolve, reject) => {
-        const request = net.request(options);
+        const request = net.request({ url, ...options });
         request.on('response', (response) => {
             let body = '';
             response.on('data', (chunk) => { body += chunk.toString(); });
@@ -74,67 +74,6 @@ app.on('window-all-closed', () => {
 });
 
 // --- ОБРАБОТЧИКИ IPC ---
-
-// Вход успешен -> Закрыть окно входа, открыть главное
-ipcMain.on('login-success', (event, username) => {
-    authenticatedUser = username;
-    if (authWindow) authWindow.close();
-    createMainWindow();
-    mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.webContents.send('user-login', authenticatedUser);
-    });
-});
-
-// Запрос на вход
-ipcMain.handle('login-request', async (event, credentials) => {
-    const postData = JSON.stringify(credentials);
-    const options = {
-        method: 'POST',
-        protocol: 'http:',
-        hostname: 'localhost',
-        port: 3000,
-        path: '/api/auth/login',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(postData)
-        }
-    };
-    return makeRequest(options.path, options, postData);
-});
-
-// Запрос на регистрацию
-ipcMain.handle('register-request', async (event, credentials) => {
-    const postData = JSON.stringify(credentials);
-    const options = {
-        method: 'POST',
-        protocol: 'http:',
-        hostname: 'localhost',
-        port: 3000,
-        path: '/api/auth/register',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(postData)
-        }
-    };
-    return makeRequest(options.path, options, postData);
-});
-
-// Открытие внешних ссылок
-ipcMain.on('open-shop', () => shell.openExternal('https://hor1zon.fun'));
-ipcMain.on('open-about', () => {
-    // Логика создания окна 'О нас'
-});
-
-// Выход из системы
-ipcMain.on('logout', () => {
-    authenticatedUser = null;
-    if (mainWindow) {
-        mainWindow.close();
-    }
-    createAuthWindow();
-});
-
-// --- ЛОГИКА ЗАПУСКА ИГРЫ ---
 ipcMain.handle('launch-game', async (event, options) => {
     if (!authenticatedUser) {
         return { success: false, message: 'Пользователь не аутентифицирован.' };
@@ -177,4 +116,57 @@ ipcMain.handle('launch-game', async (event, options) => {
     });
 
     return { success: true };
+});
+
+// Вход успешен -> Закрыть окно входа, открыть главное
+ipcMain.on('login-success', (event, username) => {
+    authenticatedUser = username;
+    if (authWindow) authWindow.close();
+    createMainWindow();
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('user-login', authenticatedUser);
+    });
+});
+
+// Запрос на вход
+ipcMain.handle('login-request', async (event, credentials) => {
+    const postData = JSON.stringify(credentials);
+    const url = 'http://localhost:3000/api/auth/login';
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData)
+        }
+    };
+    return makeRequest(url, options, postData);
+});
+
+// Запрос на регистрацию
+ipcMain.handle('register-request', async (event, credentials) => {
+    const postData = JSON.stringify(credentials);
+    const url = 'http://localhost:3000/api/auth/register';
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData)
+        }
+    };
+    return makeRequest(url, options, postData);
+});
+
+// Открытие внешних ссылок
+ipcMain.on('open-shop', () => shell.openExternal('https://hor1zon.fun'));
+ipcMain.on('open-about', () => {
+    // Логика создания окна 'О нас'
+});
+
+// Выход из системы
+ipcMain.on('logout', () => {
+    authenticatedUser = null;
+    if (mainWindow) {
+        mainWindow.close();
+    }
+    createAuthWindow();
 });
