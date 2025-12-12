@@ -41,17 +41,26 @@
                     </div>
                     <div class="server-status">
                         <h3>Статус сервера</h3>
-                        <div class="info-row"><span>Сервер:</span><span class="value">Horizon World</span></div>
-                        <div class="info-row"><span>Версия:</span><span class="value">1.20.1</span></div>
-                        <div class="info-row"><span>Игроки:</span><span class="value">124/200</span></div>
+                        <div class="info-row"><span>MOTD:</span><span id="server-motd" class="value">Загрузка...</span></div>
+                        <div class="info-row"><span>Версия:</span><span id="server-version" class="value">Загрузка...</span></div>
+                        <div class="info-row"><span>Игроки:</span><span id="server-players" class="value">Загрузка...</span></div>
                     </div>
+
                 </div>
 
                 <div id="servers-page" class="page" style="display: none;">
-                    <h2>Список серверов</h2>
+                    <div class="placeholder-content">
+                        <i class="fas fa-server big-icon"></i>
+                        <h2>Скоро здесь появятся серверы</h2>
+                        <p>Мы работаем над добавлением списка серверов прямо в лаунчер для вашего удобства.</p>
+                    </div>
                 </div>
                 <div id="wardrobe-page" class="page" style="display: none;">
-                    <h2>Гардероб</h2>
+                    <div class="placeholder-content">
+                        <i class="fas fa-tshirt big-icon"></i>
+                        <h2>Гардероб в разработке</h2>
+                        <p>Здесь вы сможете настраивать внешний вид вашего персонажа и управлять скинами.</p>
+                    </div>
                 </div>
                 <div id="notifications-page" class="page" style="display: none;">
                     <h2>Двухфакторная аутентификация</h2>
@@ -78,15 +87,45 @@
                 <button id="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
             <div class="actions">
+                <div id="launch-progress-container" class="launch-progress-container" style="display: none;">
+                    <span id="launch-status-text"></span>
+                    <div class="progress-bar">
+                        <div id="progress-bar-inner" class="progress-bar-inner"></div>
+                    </div>
+                </div>
                 <button id="play-btn" class="play-btn">ИГРАТЬ</button>
                 <button class="settings-btn" id="settings-btn-bottom"><i class="fas fa-cog"></i></button>
             </div>
         </footer>
     </div>
 
-    <!-- Wardrobe Modal -->
-    <div id="wardrobe-modal" class="modal">
-        <!-- ... (содержимое модального окна гардероба без изменений) ... -->
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Настройки запуска</h2>
+                <button id="close-settings-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label for="version-select">Версия:</label>
+                    <select id="version-select">
+                        <option value="1.20.1">1.20.1</option>
+                        <option value="1.19.4">1.19.4</option>
+                        <option value="1.18.2">1.18.2</option>
+                        <option value="1.16.5">1.16.5</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label for="ram-slider">Память (RAM):</label>
+                    <input type="range" id="ram-slider" min="2" max="16" value="4" step="1">
+                    <span id="ram-value">4 ГБ</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="play-btn">Сохранить</button>
+            </div>
+        </div>
     </div>
 
     <!-- Alert Box -->

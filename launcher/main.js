@@ -122,7 +122,59 @@ ipcMain.handle('register-request', async (event, credentials) => {
 // Открытие внешних ссылок
 ipcMain.on('open-shop', () => shell.openExternal('https://hor1zon.fun'));
 ipcMain.on('open-about', () => {
-    if (!aboutWindow) {
-        // Логика создания окна 'О нас'
+    // Логика создания окна 'О нас'
+});
+
+// Выход из системы
+ipcMain.on('logout', () => {
+    authenticatedUser = null;
+    if (mainWindow) {
+        mainWindow.close();
     }
+    createAuthWindow();
+});
+
+// --- ЛОГИКА ЗАПУСКА ИГРЫ ---
+ipcMain.handle('launch-game', async (event, options) => {
+    if (!authenticatedUser) {
+        return { success: false, message: 'Пользователь не аутентифицирован.' };
+    }
+
+    const { version, ram } = options;
+
+    const launchOptions = {
+        authorization: Authenticator.getAuth(authenticatedUser, ''), // Пароль не требуется для оффлайн-режима
+        root: path.join(app.getPath('userData'), 'minecraft'),
+        version: {
+            number: version,
+            type: 'release'
+        },
+        memory: {
+            max: `${ram}M`,
+            min: '1024M'
+        },
+    };
+
+    launcher.launch(launchOptions);
+
+    launcher.on('debug', (e) => console.log('[DEBUG]', e));
+    launcher.on('data', (e) => console.log('[DATA]', e));
+    launcher.on('progress', (e) => {
+        mainWindow.webContents.send('launch-progress', {
+            type: e.type,
+            task: e.task,
+            total: e.total,
+            loaded: e.loaded
+        });
+    });
+
+    launcher.on('close', (e) => {
+        if (e === 0) {
+            mainWindow.webContents.send('launch-success');
+        } else {
+            mainWindow.webContents.send('launch-error', `Игра закрылась с кодом ошибки: ${e}`);
+        }
+    });
+
+    return { success: true };
 });
