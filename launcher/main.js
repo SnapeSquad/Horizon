@@ -9,9 +9,19 @@ let aboutWindow;
 let authenticatedUser = null;
 
 // --- Утилита для выполнения сетевых запросов ---
-function makeRequest(url, options, postData) {
+function makeRequest(urlString, options, postData) {
     return new Promise((resolve, reject) => {
-        const request = net.request({ url, ...options });
+        const parsedUrl = new URL(urlString);
+        const requestOptions = {
+            protocol: parsedUrl.protocol,
+            hostname: parsedUrl.hostname,
+            port: parsedUrl.port,
+            path: parsedUrl.pathname,
+            ...options
+        };
+
+        const request = net.request(requestOptions);
+
         request.on('response', (response) => {
             let body = '';
             response.on('data', (chunk) => { body += chunk.toString(); });
@@ -23,7 +33,10 @@ function makeRequest(url, options, postData) {
                 }
             });
         });
-        request.on('error', (error) => { reject(error); });
+        request.on('error', (error) => {
+            console.error(`[makeRequest] Network Error: ${error.message}`);
+            reject(error);
+        });
         if (postData) {
             request.write(postData);
         }
@@ -60,6 +73,28 @@ function createMainWindow() {
         }
     });
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
+}
+
+function createAboutWindow() {
+    if (aboutWindow) {
+        aboutWindow.focus();
+        return;
+    }
+    aboutWindow = new BrowserWindow({
+        width: 600,
+        height: 400,
+        frame: false,
+        resizable: false,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            enableRemoteModule: false,
+        }
+    });
+    aboutWindow.loadFile(path.join(__dirname, 'about.html'));
+    aboutWindow.on('closed', () => {
+        aboutWindow = null;
+    });
 }
 
 app.whenReady().then(() => {
@@ -158,9 +193,7 @@ ipcMain.handle('register-request', async (event, credentials) => {
 
 // Открытие внешних ссылок
 ipcMain.on('open-shop', () => shell.openExternal('https://hor1zon.fun'));
-ipcMain.on('open-about', () => {
-    // Логика создания окна 'О нас'
-});
+ipcMain.on('open-about', createAboutWindow);
 
 // Выход из системы
 ipcMain.on('logout', () => {
