@@ -1,1179 +1,446 @@
+/* Reset and Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-    min-height: 100vh;
-    overflow: hidden !important;
-}
-
-/* Основной контейнер */
-.container {
-    width: 100%;
-    height: 100vh;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body, html {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #1a1a2e;
+    color: #e0e0e0;
     overflow: hidden;
 }
 
-/* Фоновые цветные столбы */
-.color-columns {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.container {
     display: flex;
+    height: 100vh;
 }
 
-.color-column {
-    flex: 1;
-    height: 100%;
-}
-
-.color-column.pink { background: #E91E63; }
-.color-column.purple { background: #9C27B0; }
-.color-column.orange { background: #FF9800; }
-.color-column.blue { background: #2196F3; }
-.color-column.green { background: #4CAF50; }
-
-/* Логотип в левом верхнем углу */
-.logo-container {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    z-index: 1000;
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: rgba(22, 22, 37, 0.7);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .logo {
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0);
-    border-radius: 18px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.logo:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    border-color: rgba(102, 126, 234, 0.5);
+    gap: 10px;
+    margin-bottom: 40px;
 }
 
 .logo img {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-    border-radius: 12px;
-    transition: transform 0.3s ease;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
 }
 
-.logo:hover img {
-    transform: scale(1.1);
+.logo span {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
 }
 
-/* Кнопки слева */
-.left-buttons {
-    position: absolute;
-    top: 50%;
-    left: 50px;
-    transform: translateY(-50%);
+.navigation {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    z-index: 100;
+    gap: 10px;
 }
 
-.left-btn {
-    width: 70px;
-    height: 70px;
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-    border-radius: 20px;
+.nav-item {
+    padding: 15px;
+    border-radius: 8px;
+    color: #a0a0d0;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 28px;
-    color: #333;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
+    gap: 15px;
+    transition: all 0.3s ease;
 }
 
-.left-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
+.nav-item:hover {
+    background-color: rgba(30, 30, 54, 0.8);
+    color: #ffffff;
 }
 
-.left-btn:hover::before {
-    transform: translateX(100%);
+.nav-item.active {
+    background-color: #e94560;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
 }
 
-.left-btn:hover {
-    transform: translateY(-5px) scale(1.05);
-    color: #b3beee;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 0);
-}
-
-.left-btn.active {
-    background: rgba(255, 255, 255, 0);
-    color: #667eea;
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-}
-
-.column-buttons {
-    position: absolute;
-    top: 50px;
-    width: 100%;
-    display: flex;
-    justify-content: center; 
-    gap: 50px; 
-    z-index: 100;
-}
-
-.forum-container {
-    width: auto; /* Изменено с 20% на auto */
-    display: flex;
-    justify-content: center;
-}
-
-.about-container {
-    width: auto; /* Изменено с 20% на auto */
-    display: flex;
-    justify-content: center;
-}
-
-.shop-container {
-    width: auto; /* Изменено с 20% на auto */
-    display: flex;
-    justify-content: center;
-}
-
-.text-btn {
-    width: 150px; /* Немного уменьшил ширину */
-    height: 60px;
-    border: none;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: 600;
-    color: white;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-.text-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.text-btn:hover::before {
-    transform: translateX(100%);
-}
-
-.forum-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-}
-
-.forum-btn:hover {
-    background: rgba(255, 255, 255, 0);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(156, 39, 176, 0.5);
-    border-color: rgba(255, 255, 255, 0.658);
-}
-
-.about-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-}
-
-.about-btn:hover {
-    background: rgba(255, 255, 255, 0);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(255, 152, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-.shop-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(255, 255, 255, 0.562);
-}
-
-.shop-btn:hover {
-    background: rgba(255, 255, 255, 0);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(33, 150, 243, 0.5);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-/* Основной контент */
+/* Main Content */
 .main-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 100px 80px 150px;
-    overflow-y: auto;
-    z-index: 2;
-    pointer-events: none;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: url('https://www.xtrafondos.com/wallpapers/resized/paisaje-digital-en-el-espacio-10359.jpg?s=large') no-repeat center center/cover;
 }
 
-.main-content > * {
-    pointer-events: auto;
+.header {
+    padding: 20px 40px;
+    display: flex;
+    justify-content: flex-start;
+    background-color: rgba(22, 22, 37, 0.5);
+    backdrop-filter: blur(5px);
 }
 
-.main-content h1 {
-    color: #333;
-    margin-bottom: 50px;
-    font-size: 48px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #99a4d1 0%, #2b0253 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
-    letter-spacing: 1px;
-    text-align: center;
+.header-link {
+    color: #a0a0d0;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.header-link:hover {
+    color: #e94560;
+}
+
+.content {
+    padding: 40px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .page {
-    display: none;
+    width: 100%;
+    max-width: 800px;
 }
 
-.page.active {
-    display: block;
-}
-
-/* Карточка приветствия */
-.welcome-card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 24px;
-    padding: 40px;
-    margin-bottom: 40px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.welcome-card h2 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 32px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    justify-content: center;
-}
-
-.welcome-card h2 i {
-    color: #667eea;
-}
-
-.welcome-card p {
-    font-size: 18px;
-    color: #666;
-    line-height: 1.6;
-    text-align: center;
-}
-
-/* Статус сервера */
-.server-status {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 24px;
+.welcome-card, .server-status, .launch-settings {
+    background-color: rgba(22, 22, 37, 0.8);
     padding: 30px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
 }
 
-.server-status h3 {
-    color: #333;
-    margin-bottom: 25px;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: center;
+h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #ffffff;
 }
 
-.server-status h3 i {
-    color: #4CAF50;
-}
-
-.server-info {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+p {
+    color: #a0a0d0;
 }
 
 .info-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 10px 0;
+    border-bottom: 1px solid #2c2c44;
 }
 
 .info-row:last-child {
     border-bottom: none;
 }
 
-.label {
+.value {
+    color: #e94560;
     font-weight: 600;
-    color: #555;
+}
+
+.placeholder-content {
+    text-align: center;
+    color: #a0a0d0;
+    padding: 50px;
+}
+
+.big-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: #e94560;
+}
+
+.launch-settings {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1; /* Allow container to grow */
+}
+
+.launch-progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    color: #a0a0d0;
+}
+
+#launch-status-text {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background-color: #2c2c44;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-inner {
+    width: 0%;
+    height: 100%;
+    background-color: #e94560;
+    border-radius: 3px;
+    transition: width 0.2s ease-out;
+}
+
+.setting-item label {
+    font-weight: bold;
+    min-width: 120px;
+}
+
+.setting-item select, .setting-item input[type="range"] {
+    flex-grow: 1;
+}
+
+.setting-item select {
+    padding: 8px;
+    border-radius: 8px;
+    background: #2c2c3e;
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.setting-item input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #2c2c3e;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.setting-item input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #e94560;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.setting-item #ram-value {
+    min-width: 50px;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* 2FA Options */
+.tfa-options {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tfa-option {
+    flex: 1;
+    background-color: rgba(30, 30, 54, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #a0a0d0;
+    padding: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     font-size: 16px;
 }
 
-.value {
-    font-weight: 700;
-    color: #333;
-    font-size: 18px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.tfa-option:hover {
+    background-color: #e94560;
+    color: #ffffff;
 }
 
-/* Заголовки разделов */
-.section-header {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 24px;
-    padding: 40px;
-    margin-bottom: 40px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.section-header h2 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 32px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    justify-content: center;
-}
-
-.section-header p {
-    font-size: 18px;
-    color: #666;
-    line-height: 1.6;
-    text-align: center;
-}
-
-/* Кнопка открытия гардероба */
-.open-btn {
-    background: rgba(255, 255, 255, 0);
-    border: 2px solid rgba(75, 69, 69, 0);
-    border-radius: 20px;
-    color: white;
-    padding: 25px 50px;
-    font-size: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
-    position: relative;
-    overflow: hidden;
-    margin: 0 auto;
-}
-
-.open-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: translateX(-100%);
-}
-
-.open-btn:hover::before {
-    animation: shimmer 1s ease;
-}
-
-@keyframes shimmer {
-    100% {
-        transform: translateX(100%);
-    }
-}
-
-.open-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.6);
-}
-
-/* Кнопка Настройки внизу */
-.settings-button-container {
-    position: fixed;
-    bottom: 40px;
-    left: 50px;
-    z-index: 100;
-}
-
-.settings-btn-bottom {
-    width: 70px;
-    height: 70px;
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 28px;
-    color: #333;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-.settings-btn-bottom::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.settings-btn-bottom:hover::before {
-    transform: translateX(100%);
-}
-
-.settings-btn-bottom:hover {
-    transform: translateY(-5px) scale(1.05);
-    color: #FF9800;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 1);
-}
-
-/* Кнопка ИГРАТЬ */
-.play-button-container {
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-}
-
-.play-btn {
-    width: 250px;
-    height: 70px;
-    background: linear-gradient(135deg, #32CD32 0%, #228B22 100%);
-    border: none;
-    border-radius: 15px;
-    color: white;
-    font-size: 24px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 15px 35px rgba(50, 205, 50, 0.4);
-    position: relative;
-    overflow: hidden;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.play-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.8s ease;
-}
-
-.play-btn:hover::before {
-    transform: translateX(100%);
-}
-
-.play-btn:hover {
-    background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%);
-    transform: translateY(-8px);
-    box-shadow: 0 20px 45px rgba(144, 238, 144, 0.6);
-}
-
-/* Модальное окно гардероба */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 2000;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(8px);
-}
-
-.modal.active {
-    display: flex;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.modal-content {
-    background: white;
-    border-radius: 24px;
-    width: 95%;
-    max-width: 1400px;
-    max-height: 90vh;
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-direction: column;
-    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* Заголовок модального окна */
-.modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 28px 40px;
+/* Bottom Bar */
+.bottom-bar {
+    background-color: rgba(22, 22, 37, 0.7);
+    padding: 15px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: 24px 24px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-.modal-title {
+.user-info {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
 }
 
-.modal-title i {
-    font-size: 32px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-.modal-title h2 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-.close-btn {
-    background: rgba(255, 255, 255, 0.2);
+#logout-btn {
+    background: none;
     border: none;
-    color: white;
-    font-size: 32px;
+    color: #a0a0d0;
     cursor: pointer;
-    padding: 0;
-    width: 48px;
-    height: 48px;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+#logout-btn:hover {
+    color: #e94560;
+}
+
+.actions {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 50%;
+    gap: 15px;
+}
+
+.play-btn {
+    padding: 12px 30px;
+    background-color: #e94560;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
     transition: all 0.3s ease;
+}
+
+.play-btn:hover {
+    background-color: #ff5c77;
+    transform: translateY(-2px);
+}
+
+.settings-btn {
+    padding: 12px;
+    background-color: #2c2c44;
+    border: none;
+    border-radius: 8px;
+    color: #a0a0d0;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.settings-btn:hover {
+    background-color: #3a3a5a;
+    color: #ffffff;
+}
+
+#welcome-view {
+    display: none;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
     backdrop-filter: blur(5px);
 }
 
-.close-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-}
-
-/* Поисковая строка */
-.search-container {
-    padding: 24px 40px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background: #fafafa;
-}
-
-.search-box {
-    position: relative;
+.modal-content {
+    background-color: #1a1a2e;
+    margin: 15% auto;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 80%;
     max-width: 500px;
-    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.4);
 }
 
-.search-box i {
-    position: absolute;
-    left: 24px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    font-size: 18px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 18px 24px 18px 60px;
-    border: 2px solid rgba(0, 0, 0, 0.08);
-    border-radius: 16px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.search-box input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
-}
-
-/* Основное тело модального окна */
-.wardrobe-body {
-    display: flex;
-    flex: 1;
-    padding: 25px 40px 30px;
-    gap: 35px;
-    overflow: hidden;
-    min-height: 0;
-    max-height: calc(85vh - 180px);
-}
-
-/* Левая часть: Категории и список одежды */
-.clothes-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    max-height: 100%;
-}
-
-.category-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
-}
-
-.category-tab {
-    flex: 1;
-    background: rgba(0, 0, 0, 0.03);
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 14px;
-    padding: 16px 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #666;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.category-tab i {
-    font-size: 20px;
-}
-
-.category-tab:hover {
-    background: rgba(102, 126, 234, 0.1);
-    border-color: rgba(102, 126, 234, 0.2);
-    color: #667eea;
-    transform: translateY(-2px);
-}
-
-.category-tab.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    color: white;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.category-tab.active i {
-    color: white;
-}
-
-/* Контейнер списка одежды */
-.clothes-list-container {
-    flex: 1;
-    background: rgba(0, 0, 0, 0.02);
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 18px;
-    padding: 18px;
-    overflow: hidden;
-    min-height: 0;
-    max-height: 100%;
-}
-
-.clothes-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 14px;
-    overflow-y: auto;
-    max-height: 100%;
-    padding-right: 8px;
-    height: 100%;
-}
-
-.clothes-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.clothes-list::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-}
-
-.clothes-list::-webkit-scrollbar-thumb {
-    background: rgba(102, 126, 234, 0.5);
-    border-radius: 10px;
-}
-
-.clothes-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(102, 126, 234, 0.7);
-}
-
-.clothing-item {
-    background: white;
-    border: 2px solid rgba(0, 0, 0, 0.08);
-    border-radius: 14px;
-    padding: 18px 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.clothing-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.05), transparent);
-    transform: translateX(-100%);
-}
-
-.clothing-item:hover::before {
-    animation: shimmer 1s ease;
-}
-
-.clothing-item:hover {
-    border-color: #667eea;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-}
-
-.clothing-item.selected {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border-color: #667eea;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
-}
-
-.clothing-item i {
-    font-size: 26px;
-    color: #667eea;
-    margin-bottom: 6px;
-}
-
-.clothing-item.selected i {
-    color: #764ba2;
-}
-
-.clothing-item span {
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    line-height: 1.3;
-}
-
-/* Правая часть: Модель персонажа и выбранная одежда */
-.preview-section {
-    width: 380px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    flex-shrink: 0;
-    max-height: 100%;
-}
-
-/* Превью персонажа */
-.character-preview {
-    background: rgba(0, 0, 0, 0.02);
-    border: 2px solid rgba(0, 0, 0, 0.05);
-    border-radius: 18px;
+.modal-header {
     padding: 20px;
-    flex-shrink: 0;
-}
-
-.character-preview h3 {
-    font-size: 17px;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 18px;
+    border-bottom: 1px solid #2c2c44;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
 }
 
-.character-preview h3 i {
-    color: #667eea;
+.modal-header h2 {
+    margin: 0;
 }
 
-.character-model {
-    height: 220px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.character {
-    width: 120px;
-    height: 180px;
-    position: relative;
-    transition: transform 0.5s ease;
-}
-
-.character-head,
-.character-body,
-.character-legs,
-.character-shoes {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #8B4513;
-    border-radius: 8px;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-}
-
-.character-head {
-    width: 50px;
-    height: 50px;
-    top: 15px;
-}
-
-.character-body {
-    width: 70px;
-    height: 70px;
-    top: 75px;
-    background: #4682B4;
-}
-
-.character-legs {
-    width: 60px;
-    height: 50px;
-    top: 155px;
-    background: #32CD32;
-}
-
-.character-shoes {
-    width: 65px;
-    height: 18px;
-    top: 215px;
-    background: #333;
-}
-
-/* Управление вращением */
-.rotation-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    background: white;
-    border-radius: 12px;
-    padding: 14px;
-    border: 2px solid rgba(0, 0, 0, 0.05);
-}
-
-.rotation-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #666;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.rotation-label i {
-    color: #667eea;
-}
-
-.rotate-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.close-btn {
+    color: #a0a0d0;
+    font-size: 28px;
+    font-weight: bold;
+    background: none;
     border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #e94560;
+    text-decoration: none;
+    outline: none;
+}
+
+.modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #2c2c44;
+    text-align: right;
+}
+
+
+/* Alert Box */
+#alert-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 8px;
     color: white;
     font-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.rotate-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-}
-
-/* Кнопки действий */
-.wardrobe-actions {
-    display: flex;
-    gap: 14px;
-    margin-top: auto;
-    flex-shrink: 0;
-}
-
-.action-btn {
-    flex: 1;
-    padding: 16px 20px;
-    border-radius: 12px;
-    border: 2px solid;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.action-btn.secondary {
-    background: white;
-    border-color: rgba(0, 0, 0, 0.1);
-    color: #666;
-}
-
-.action-btn.secondary:hover {
-    background: rgba(0, 0, 0, 0.02);
-    border-color: rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-}
-
-.action-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    color: white;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-}
-
-.action-btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
-}
-
-/* Сообщение об ошибке */
-.error-message {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    background: #ff4444;
-    color: white;
-    padding: 18px 25px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    animation: slideInRight 0.3s ease;
     z-index: 1001;
-    box-shadow: 0 10px 30px rgba(255, 68, 68, 0.3);
-    max-width: 400px;
-    word-break: break-word;
+    display: none;
+    background-color: rgba(22, 22, 37, 0.8);
+    backdrop-filter: blur(5px);
 }
 
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+#alert-box.success {
+    border-left: 4px solid #4CAF50;
 }
 
-/* Адаптивность */
-@media (max-width: 1200px) {
-    .wardrobe-body {
-        flex-direction: column;
-        gap: 25px;
-    }
-    
-    .preview-section {
-        width: 100%;
-        flex-direction: row;
-    }
-    
-    .character-preview {
-        flex: 1;
-    }
-    
-    .selected-section {
-        flex: 1;
-    }
-}
-
-@media (max-width: 768px) {
-    .left-buttons {
-        left: 20px;
-        gap: 15px;
-    }
-    
-    .left-btn {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-    }
-    
-    .main-content {
-        padding: 80px 30px 150px;
-    }
-    
-    .main-content h1 {
-        font-size: 36px;
-    }
-    
-    .text-btn {
-        width: 140px;
-        height: 50px;
-        font-size: 16px;
-    }
-    
-    .play-btn {
-        width: 200px;
-        height: 60px;
-        font-size: 20px;
-    }
-    
-    .settings-button-container {
-        left: 20px;
-        bottom: 40px;
-    }
-    
-    .settings-btn-bottom {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-    }
-    
-    .column-buttons {
-        top: 30px;
-    }
-    
-    .modal-content {
-        width: 95%;
-        height: 90vh;
-    }
-    
-    .wardrobe-body {
-        padding: 15px;
-        flex-direction: column;
-    }
-    
-    .category-tabs {
-        overflow-x: auto;
-        padding-bottom: 10px;
-    }
-    
-    .category-tab {
-        min-width: 100px;
-        padding: 14px 10px;
-        font-size: 12px;
-    }
-    
-    .category-tab i {
-        font-size: 18px;
-    }
-    
-    .preview-section {
-        width: 100%;
-        flex-direction: column;
-    }
-    
-    .clothes-list {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    }
-    
-    .wardrobe-body {
-        max-height: calc(85vh - 160px);
-    }
+#alert-box.error {
+    border-left: 4px solid #f44336;
 }

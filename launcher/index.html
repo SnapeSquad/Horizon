@@ -3,208 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Launcher</title>
+    <title>Horizon Launcher</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="logo-container">
-        <div class="logo">
-            <img src="https://i.pinimg.com/originals/8e/19/8a/8e198a2393ac46c0854e9252f7c24583.jpg" alt="Minecraft Logo">
-        </div>
-    </div>
-    <!-- Основной контейнер -->
     <div class="container">
-        <!-- Фоновые цветные столбы -->
-        <div class="color-columns">
-            <div class="color-column pink"></div>
-            <div class="color-column purple"></div>
-            <div class="color-column orange"></div>
-            <div class="color-column blue"></div>
-            <div class="color-column green"></div>
-        </div>
-
-        <!-- Кнопки слева -->
-        <div class="left-buttons">
-            <button class="left-btn" id="main-btn" title="Главная">
-                <i class="fas fa-home"></i>
-            </button>
-            <button class="left-btn" id="servers-btn" title="Серверы">
-                <i class="fas fa-server"></i>
-            </button>
-            <button class="left-btn" id="wardrobe-btn" title="Гардероб">
-                <i class="fas fa-tshirt"></i>
-            </button>
-        </div>
-
-        <!-- Кнопки в столбах -->
-        <div class="column-buttons">
-            <div class="forum-container">
-                <button class="text-btn forum-btn" id="forum-btn">
-                    Форум
-                </button>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://i.pinimg.com/originals/8e/19/8a/8e198a2393ac46c0854e9252f7c24583.jpg" alt="Horizon Logo">
+                <span>Horizon</span>
             </div>
-            <div class="about-container">
-                <button class="text-btn about-btn" id="about-btn">
-                    О нас
-                </button>
-            </div>
-            <div class="shop-container">
-                <button class="text-btn shop-btn" id="shop-btn">
-                    Магазин
-                </button>
-            </div>
-        </div>
+            <nav class="navigation">
+                <a href="#" class="nav-item active" id="main-btn"><i class="fas fa-home"></i> Главная</a>
+                <a href="#" class="nav-item" id="servers-btn"><i class="fas fa-server"></i> Серверы</a>
+                <a href="#" class="nav-item" id="wardrobe-btn"><i class="fas fa-tshirt"></i> Гардероб</a>
+                <a href="#" class="nav-item" id="notifications-btn"><i class="fas fa-bell"></i> Уведомления</a>
+            </nav>
+        </aside>
 
-        <!-- Основной контент -->
-        <div class="main-content">
-            <h1>Horizon Launcher</h1>
-            
-            <!-- Главная страница -->
-            <div id="main-page" class="page active">
-                <div class="welcome-card">
-                    <h2><i class="fas fa-gem"></i> Добро пожаловать!</h2>
-                    <p>Выберите нужный раздел в меню слева</p>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left">
+                    <a href="#" class="header-link" id="forum-btn">Форум</a>
+                    <a href="#" class="header-link" id="about-btn">О нас</a>
+                    <a href="#" class="header-link" id="shop-btn">Магазин</a>
                 </div>
-                
-                <!-- Статус сервера -->
-                <div class="server-status">
-                    <h3><i class="fas fa-signal"></i> Статус сервера</h3>
-                    <div class="server-info">
-                        <div class="info-row">
-                            <span class="label">Сервер:</span>
-                            <span class="value">Horizon World</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">Версия:</span>
-                            <span class="value">1.20.1</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">Игроки:</span>
-                            <span class="value">124/200</span>
-                        </div>
+            </header>
+
+            <section class="content">
+                <div id="main-page" class="page">
+                    <div class="welcome-card">
+                        <h2>Добро пожаловать в Horizon!</h2>
+                        <p>Выберите сервер и начните свое приключение.</p>
+                    </div>
+                    <div class="server-status">
+                        <h3>Статус сервера</h3>
+                        <div class="info-row"><span>MOTD:</span><span id="server-motd" class="value">Загрузка...</span></div>
+                        <div class="info-row"><span>Версия:</span><span id="server-version" class="value">Загрузка...</span></div>
+                        <div class="info-row"><span>Игроки:</span><span id="server-players" class="value">Загрузка...</span></div>
+                    </div>
+
+                </div>
+
+                <div id="servers-page" class="page" style="display: none;">
+                    <div class="placeholder-content">
+                        <i class="fas fa-server big-icon"></i>
+                        <h2>Скоро здесь появятся серверы</h2>
+                        <p>Мы работаем над добавлением списка серверов прямо в лаунчер для вашего удобства.</p>
                     </div>
                 </div>
+                <div id="wardrobe-page" class="page" style="display: none;">
+                    <div class="placeholder-content">
+                        <i class="fas fa-tshirt big-icon"></i>
+                        <h2>Гардероб в разработке</h2>
+                        <p>Здесь вы сможете настраивать внешний вид вашего персонажа и управлять скинами.</p>
+                    </div>
+                </div>
+                <div id="notifications-page" class="page" style="display: none;">
+                    <h2>Двухфакторная аутентификация</h2>
+                    <p>Защитите свой аккаунт с помощью двухфакторной аутентификации.</p>
+                    <div class="tfa-options">
+                        <button class="tfa-option">
+                            <i class="fab fa-telegram-plane"></i>
+                            <span>Telegram</span>
+                        </button>
+                        <button class="tfa-option">
+                            <i class="fab fa-google"></i>
+                            <span>Google Authenticator</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Bar -->
+        <footer class="bottom-bar">
+            <div id="welcome-view" class="user-info">
+                <i class="fas fa-user"></i>
+                <span id="welcome-username"></span>
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
-            
-            <!-- Серверы -->
-            <div id="servers-page" class="page">
-                <div class="section-header">
-                    <h2><i class="fas fa-server"></i> Список серверов</h2>
-                    <p>Выберите сервер для подключения</p>
+            <div class="actions">
+                <div id="launch-progress-container" class="launch-progress-container" style="display: none;">
+                    <span id="launch-status-text"></span>
+                    <div class="progress-bar">
+                        <div id="progress-bar-inner" class="progress-bar-inner"></div>
+                    </div>
+                </div>
+                <button id="play-btn" class="play-btn">ИГРАТЬ</button>
+                <button class="settings-btn" id="settings-btn-bottom"><i class="fas fa-cog"></i></button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Настройки запуска</h2>
+                <button id="close-settings-modal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label for="version-select">Версия:</label>
+                    <select id="version-select">
+                        <option value="1.20.1">1.20.1</option>
+                        <option value="1.19.4">1.19.4</option>
+                        <option value="1.18.2">1.18.2</option>
+                        <option value="1.16.5">1.16.5</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label for="ram-slider">Память (RAM):</label>
+                    <input type="range" id="ram-slider" min="2" max="16" value="4" step="1">
+                    <span id="ram-value">4 ГБ</span>
                 </div>
             </div>
-            
-            <!-- Гардероб -->
-            <div id="wardrobe-page" class="page">
-                <div class="section-header">
-                    <h2><i class="fas fa-tshirt"></i> Настройка внешнего вида</h2>
-                    <p>Персонализируйте своего персонажа</p>
-                </div>
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="play-btn">Сохранить</button>
             </div>
-        </div>
-
-        <!-- Кнопка Настройки -->
-        <div class="settings-button-container">
-            <button class="settings-btn-bottom" id="settings-btn-bottom" title="Настройки">
-                <i class="fas fa-cog"></i>
-            </button>
-        </div>
-
-        <!-- Кнопка ИГРАТЬ -->
-        <div class="play-button-container">
-            <button id="play-btn" class="play-btn">
-                ИГРАТЬ
-            </button>
         </div>
     </div>
 
-    <!-- Модальное окно гардероба -->
-    <div id="wardrobe-modal" class="modal">
-        <div class="modal-content">
-            <!-- Заголовок модального окна -->
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fas fa-tshirt"></i>
-                    <h2>Гардероб персонажа</h2>
-                </div>
-                <button class="close-btn">&times;</button>
-            </div>
-            
-            <!-- Поисковая строка -->
-            <div class="search-container">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="search-clothes" placeholder="Поиск одежды...">
-                </div>
-            </div>
-            
-            <div class="wardrobe-body">
-                <!-- Левая часть: Категории и список одежды -->
-                <div class="clothes-section">
-                    <!-- Вкладки категорий -->
-                    <div class="category-tabs">
-                        <button class="category-tab active" data-category="head">
-                            <i class="fas fa-hat-cowboy"></i>
-                            <span>Голова</span>
-                        </button>
-                        <button class="category-tab" data-category="body">
-                            <i class="fas fa-tshirt"></i>
-                            <span>Тело</span>
-                        </button>
-                        <button class="category-tab" data-category="legs">
-                            <i class="fas fa-running"></i>
-                            <span>Ноги</span>
-                        </button>
-                        <button class="category-tab" data-category="shoes">
-                            <i class="fas fa-shoe-prints"></i>
-                            <span>Обувь</span>
-                        </button>
-                        <button class="category-tab" data-category="accessories">
-                            <i class="fas fa-gem"></i>
-                            <span>Аксессуары</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Список одежды -->
-                    <div class="clothes-list-container">
-                        <div id="clothes-list" class="clothes-list">
-                            <!-- Содержимое будет заполняться через JavaScript -->
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Правая часть: Модель персонажа -->
-                <div class="preview-section">
-                    <!-- Модель персонажа -->
-                    <div class="character-preview">
-                        <h3>Превью персонажа</h3>
-                        <div class="character-model">
-                            <div class="character" id="character">
-                                <div class="character-head"></div>
-                                <div class="character-body"></div>
-                                <div class="character-legs"></div>
-                                <div class="character-shoes"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Управление вращением -->
-                        <div class="rotation-controls">
-                            <button id="rotate-left" class="rotate-btn">
-                                <i class="fas fa-undo"></i>
-                            </button>
-                            <div class="rotation-label">
-                                <i class="fas fa-sync-alt"></i>
-                                <span>Повернуть модель</span>
-                            </div>
-                            <button id="rotate-right" class="rotate-btn">
-                                <i class="fas fa-redo"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Alert Box -->
+    <div id="alert-box" class="alert-box">
+        <p id="alert-message"></p>
     </div>
 
     <script src="script.js"></script>
