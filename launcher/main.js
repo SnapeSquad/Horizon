@@ -9,9 +9,23 @@ let aboutWindow;
 let authenticatedUser = null;
 
 // --- Утилита для выполнения сетевых запросов ---
+<<<<<<< HEAD
 function makeRequest(options, postData) {
+=======
+function makeRequest(urlString, options, postData) {
+>>>>>>> 0e800cdc67d6b53feacf26dc79738c3e9fc8d628
     return new Promise((resolve, reject) => {
-        const request = net.request(options);
+        const parsedUrl = new URL(urlString);
+        const requestOptions = {
+            protocol: parsedUrl.protocol,
+            hostname: parsedUrl.hostname,
+            port: parsedUrl.port,
+            path: parsedUrl.pathname,
+            ...options
+        };
+
+        const request = net.request(requestOptions);
+
         request.on('response', (response) => {
             let body = '';
             response.on('data', (chunk) => { body += chunk.toString(); });
@@ -23,7 +37,10 @@ function makeRequest(options, postData) {
                 }
             });
         });
-        request.on('error', (error) => { reject(error); });
+        request.on('error', (error) => {
+            console.error(`[makeRequest] Network Error: ${error.message}`);
+            reject(error);
+        });
         if (postData) {
             request.write(postData);
         }
@@ -60,6 +77,28 @@ function createMainWindow() {
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
 }
 
+function createAboutWindow() {
+    if (aboutWindow) {
+        aboutWindow.focus();
+        return;
+    }
+    aboutWindow = new BrowserWindow({
+        width: 600,
+        height: 400,
+        frame: false,
+        resizable: false,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            enableRemoteModule: false,
+        }
+    });
+    aboutWindow.loadFile(path.join(__dirname, 'about.html'));
+    aboutWindow.on('closed', () => {
+        aboutWindow = null;
+    });
+}
+
 app.whenReady().then(() => {
     createAuthWindow();
     app.on('activate', () => {
@@ -72,6 +111,7 @@ app.on('window-all-closed', () => {
 });
 
 // --- ОБРАБОТЧИКИ IPC ---
+<<<<<<< HEAD
 
 // Вход успешен -> Закрыть окно входа, открыть главное
 ipcMain.on('login-success', (event, username) => {
@@ -133,6 +173,8 @@ ipcMain.on('logout', () => {
 });
 
 // --- ЛОГИКА ЗАПУСКА ИГРЫ ---
+=======
+>>>>>>> 0e800cdc67d6b53feacf26dc79738c3e9fc8d628
 ipcMain.handle('launch-game', async (event, options) => {
     if (!authenticatedUser) {
         return { success: false, message: 'Пользователь не аутентифицирован.' };
@@ -185,4 +227,59 @@ ipcMain.handle('launch-game', async (event, options) => {
     launcher.launch(launchOptions);
 
     return { success: true };
+<<<<<<< HEAD
 });
+=======
+});
+
+// Вход успешен -> Закрыть окно входа, открыть главное
+ipcMain.on('login-success', (event, username) => {
+    authenticatedUser = username;
+    if (authWindow) authWindow.close();
+    createMainWindow();
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('user-login', authenticatedUser);
+    });
+});
+
+// Запрос на вход
+ipcMain.handle('login-request', async (event, credentials) => {
+    const postData = JSON.stringify(credentials);
+    const url = 'http://localhost:3000/api/auth/login';
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData)
+        }
+    };
+    return makeRequest(url, options, postData);
+});
+
+// Запрос на регистрацию
+ipcMain.handle('register-request', async (event, credentials) => {
+    const postData = JSON.stringify(credentials);
+    const url = 'http://localhost:3000/api/auth/register';
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData)
+        }
+    };
+    return makeRequest(url, options, postData);
+});
+
+// Открытие внешних ссылок
+ipcMain.on('open-shop', () => shell.openExternal('https://hor1zon.fun'));
+ipcMain.on('open-about', createAboutWindow);
+
+// Выход из системы
+ipcMain.on('logout', () => {
+    authenticatedUser = null;
+    if (mainWindow) {
+        mainWindow.close();
+    }
+    createAuthWindow();
+});
+>>>>>>> 0e800cdc67d6b53feacf26dc79738c3e9fc8d628
