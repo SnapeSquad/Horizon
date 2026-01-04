@@ -444,3 +444,154 @@ p {
 #alert-box.error {
     border-left: 4px solid #f44336;
 }
+
+/* Notifications */
+#notifications-container {
+    margin-bottom: 30px;
+}
+
+.notification-item {
+    background: rgba(22, 22, 37, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.notification-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-content h3 {
+    margin: 0 0 8px 0;
+    color: #fff;
+    font-size: 18px;
+}
+
+.notification-content p {
+    margin: 0;
+    color: #a0a0d0;
+    font-size: 14px;
+}
+
+.notification-action {
+    padding: 10px 20px;
+    background: #e94560;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.notification-action:hover {
+    background: #ff5c77;
+}
+
+/* 2FA Section */
+.tfa-section {
+    background: rgba(22, 22, 37, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.tfa-section h2 {
+    margin-bottom: 10px;
+}
+
+.tfa-section > p {
+    margin-bottom: 20px;
+    color: #a0a0d0;
+}
+
+.tfa-status {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.tfa-status-enabled {
+    color: #4CAF50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tfa-status-disabled {
+    color: #f44336;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tfa-type {
+    background: rgba(233, 69, 96, 0.2);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.tfa-setup {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.tfa-setup h3 {
+    margin-bottom: 15px;
+}
+
+.tfa-setup img {
+    display: block;
+    margin: 20px auto;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.tfa-setup code {
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+    color: #e94560;
+}
+
+.tfa-setup input {
+    background: rgba(26, 26, 46, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #e0e0e0;
+    padding: 12px;
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 4px;
+    font-weight: 600;
+}
+
+.tfa-setup button {
+    background: #e94560;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.tfa-setup button:hover {
+    background: #ff5c77;
+}

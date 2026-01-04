@@ -67,11 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     shopBtn.addEventListener('click', () => {
-        window.ipcRenderer.send('open-shop');
+        window.ipc.send('open-shop');
     });
 
     aboutBtn.addEventListener('click', () => {
-        window.ipcRenderer.send('open-about');
+        window.ipc.send('open-about');
     });
 
     forumBtn.addEventListener('click', () => {
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle user-login event from main process
-    window.ipcRenderer.on('user-login', (username) => {
+    window.ipc.on('user-login', (username) => {
         const welcomeView = document.getElementById('welcome-view');
         const welcomeUsernameSpan = document.getElementById('welcome-username');
         const mainPage = document.getElementById('main-page');
@@ -194,7 +194,183 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обновляем статус при загрузке и при входе пользователя
     updateServerStatus();
-    window.ipc.on('user-login', () => {
+    
+    let currentUsername = null;
+    window.ipc.on('user-login', (username) => {
+        currentUsername = username;
         updateServerStatus();
+        loadNotifications();
+        check2FAStatus();
+    });
+
+    // --- ЛОГИКА УВЕДОМЛЕНИЙ И 2FA ---
+    async function loadNotifications() {
+        const container = document.getElementById('notifications-container');
+        if (!container) return;
+
+        container.innerHTML = '';
+        
+        // Первое уведомление о необходимости настроить 2FA
+        const notification = document.createElement('div');
+        notification.className = 'notification-item';
+        notification.innerHTML = `
+            <div class="notification-icon">🔒</div>
+            <div class="notification-content">
+                <h3>Защитите свой аккаунт</h3>
+                <p>Рекомендуем настроить двухфакторную аутентификацию для дополнительной защиты вашего аккаунта.</p>
+            </div>
+            <button class="notification-action" onclick="showPage('notifications-page'); setActiveNav('notifications-btn');">Настроить</button>
+        `;
+        container.appendChild(notification);
+    }
+
+    async function check2FAStatus() {
+        if (!currentUsername) return;
+        
+        try {
+            const response = await window.ipc.invoke('get-2fa-status', currentUsername);
+            if (response && response.body && response.body.success) {
+                update2FAStatus(response.body);
+            }
+        } catch (error) {
+            console.error('Failed to get 2FA status:', error);
+        }
+    }
+
+    function update2FAStatus(status) {
+        const statusEl = document.getElementById('2fa-status');
+        if (!statusEl) return;
+
+        if (status.enabled) {
+            statusEl.innerHTML = `
+                <div class="tfa-status-enabled">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>2FA включена</span>
+                    ${status.hasTelegram ? '<span class="tfa-type">Telegram</span>' : ''}
+                    ${status.hasGoogle ? '<span class="tfa-type">Google Authenticator</span>' : ''}
+                </div>
+            `;
+        } else {
+            statusEl.innerHTML = `
+                <div class="tfa-status-disabled">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>2FA не настроена</span>
+                </div>
+            `;
+        }
+    }
+
+    // Обработчики кнопок 2FA
+    document.getElementById('telegram-2fa-btn')?.addEventListener('click', async () => {
+        if (!currentUsername) return;
+        
+        const btn = document.getElementById('telegram-2fa-btn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Настройка...';
+        
+        try {
+            const response = await window.ipc.invoke('setup-telegram-2fa', currentUsername);
+            if (response && response.body && response.body.success) {
+                const botName = response.body.botUsername ? `@${response.body.botUsername}` : 'боту';
+                showAlert(`Отправьте код "${response.body.linkCode}" ${botName} в Telegram для привязки 2FA. Код действителен 10 минут.`, false);
+                
+                // Периодически проверяем статус 2FA после привязки
+                const checkInterval = setInterval(async () => {
+                    await check2FAStatus();
+                    const statusEl = document.getElementById('2fa-status');
+                    if (statusEl && statusEl.querySelector('.tfa-status-enabled')) {
+                        clearInterval(checkInterval);
+                        showAlert('Telegram 2FA успешно привязана!', false);
+                    }
+                }, 2000);
+                
+                // Останавливаем проверку через 2 минуты
+                setTimeout(() => clearInterval(checkInterval), 120000);
+            } else {
+                showAlert(response?.body?.message || 'Ошибка настройки Telegram 2FA', true);
+            }
+        } catch (error) {
+            console.error('Telegram 2FA setup error:', error);
+            showAlert('Ошибка подключения к серверу. Убедитесь, что API-сервер запущен.', true);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    });
+
+    document.getElementById('google-2fa-btn')?.addEventListener('click', async () => {
+        if (!currentUsername) return;
+        
+        const btn = document.getElementById('google-2fa-btn');
+        const setupContainer = document.getElementById('2fa-setup-container');
+        if (!setupContainer) return;
+
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Настройка...';
+
+        try {
+            const response = await window.ipc.invoke('setup-google-2fa', currentUsername);
+            if (response && response.body && response.body.success) {
+                setupContainer.innerHTML = `
+                    <div class="tfa-setup">
+                        <h3>Настройка Google Authenticator</h3>
+                        <p>Отсканируйте QR-код в приложении Google Authenticator:</p>
+                        <img src="${response.body.qrCode}" alt="QR Code" style="max-width: 300px; margin: 20px 0; border: 2px solid rgba(255,255,255,0.1); border-radius: 8px;">
+                        <p>Или введите ключ вручную:</p>
+                        <code style="background: rgba(0,0,0,0.3); padding: 10px; display: block; margin: 10px 0; word-break: break-all; font-family: monospace;">${response.body.manualEntryKey}</code>
+                        <input type="text" id="google-2fa-code" placeholder="Введите 6-значный код для подтверждения" maxlength="6" style="width: 100%; padding: 10px; margin: 10px 0; text-align: center; letter-spacing: 4px; font-size: 18px; font-weight: 600;">
+                        <button id="verify-google-2fa-btn" style="width: 100%; padding: 10px; margin-top: 10px; background: #e94560; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">Подтвердить</button>
+                        <button id="cancel-google-2fa-btn" style="width: 100%; padding: 10px; margin-top: 10px; background: rgba(255,255,255,0.1); border: none; border-radius: 8px; color: white; cursor: pointer;">Отмена</button>
+                    </div>
+                `;
+                setupContainer.style.display = 'block';
+
+                // Обработчик подтверждения
+                document.getElementById('verify-google-2fa-btn')?.addEventListener('click', async () => {
+                    const code = document.getElementById('google-2fa-code')?.value;
+                    if (!code || code.length !== 6) {
+                        showAlert('Введите 6-значный код', true);
+                        return;
+                    }
+
+                    const verifyBtn = document.getElementById('verify-google-2fa-btn');
+                    verifyBtn.disabled = true;
+                    verifyBtn.textContent = 'Проверка...';
+
+                    try {
+                        const verifyResponse = await window.ipc.invoke('verify-google-2fa', currentUsername, code);
+                        if (verifyResponse && verifyResponse.body && verifyResponse.body.success) {
+                            showAlert('Google Authenticator 2FA успешно включена!', false);
+                            setupContainer.style.display = 'none';
+                            await check2FAStatus();
+                        } else {
+                            showAlert(verifyResponse?.body?.message || 'Неверный код. Попробуйте снова.', true);
+                            verifyBtn.disabled = false;
+                            verifyBtn.textContent = 'Подтвердить';
+                        }
+                    } catch (error) {
+                        console.error('Google 2FA verify error:', error);
+                        showAlert('Ошибка проверки кода. Убедитесь, что API-сервер запущен.', true);
+                        verifyBtn.disabled = false;
+                        verifyBtn.textContent = 'Подтвердить';
+                    }
+                });
+
+                // Обработчик отмены
+                document.getElementById('cancel-google-2fa-btn')?.addEventListener('click', () => {
+                    setupContainer.style.display = 'none';
+                });
+            } else {
+                showAlert(response?.body?.message || 'Ошибка настройки Google Authenticator', true);
+            }
+        } catch (error) {
+            console.error('Google 2FA setup error:', error);
+            showAlert('Ошибка подключения к серверу. Убедитесь, что API-сервер запущен.', true);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
     });
 });

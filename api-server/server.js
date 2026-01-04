@@ -6,13 +6,54 @@ const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const sqlite3 = require('sqlite3').verbose();
+const speakeasy = require('speakeasy');
+const QRCode = require('qrcode');
 // --- ИМПОРТ БИБЛИОТЕКИ MINECRAFT ---
 const mcu = require('minecraft-server-util');
 const cors = require('cors');
 // -----------------------------------
 const app = express();
 const PORT = 3000; 
-const USERS_DB_PATH = path.join(__dirname, 'users.json');
+const DB_PATH = path.join(__dirname, 'users.db');
+
+// --- Инициализация SQLite БД ---
+const db = new sqlite3.Database(DB_PATH, (err) => {
+    if (err) {
+        console.error('❌ Ошибка подключения к БД:', err.message);
+    } else {
+        console.log('✅ Подключено к SQLite БД');
+        // Создаем таблицы
+        db.serialize(() => {
+            db.run(`CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                telegram_chat_id TEXT,
+                google_secret TEXT,
+                two_factor_enabled INTEGER DEFAULT 0,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`);
+            
+            // Миграция данных из JSON, если файл существует
+            const USERS_JSON_PATH = path.join(__dirname, 'users.json');
+            if (fs.existsSync(USERS_JSON_PATH)) {
+                try {
+                    const jsonData = fs.readFileSync(USERS_JSON_PATH, 'utf8');
+                    const users = JSON.parse(jsonData);
+                    const stmt = db.prepare('INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)');
+                    users.forEach(user => {
+                        stmt.run(user.username, user.password);
+                    });
+                    stmt.finalize();
+                    console.log(`✅ Мигрировано ${users.length} пользователей из JSON в SQLite`);
+                } catch (err) {
+                    console.warn('⚠️ Не удалось мигрировать данные из JSON:', err.message);
+                }
+            }
+        });
+    }
+});
 
 // --- Инициализация Telegram ---
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -38,27 +79,59 @@ const pendingTgLoginsByChatId = {};
 if (bot) {
     bot.on('message', (msg) => {
         const chatId = msg.chat.id;
-        const text = msg.text ? msg.text.trim().toLowerCase() : '';
+        const text = msg.text ? msg.text.trim() : '';
+        const textLower = text.toLowerCase();
 
         console.log(`[TG MSG] Received from ${chatId}: ${text}`);
 
-        // 1. Проверяем, является ли сообщение кодом, который мы ждем
-        if (pendingTgLogins.hasOwnProperty(text)) {
-            const loginData = pendingTgLogins[text];
+        // 1. Проверяем, является ли сообщение кодом для входа или привязки 2FA
+        // Проверяем как в нижнем, так и в верхнем регистре
+        const codeKey = textLower;
+        const codeKeyUpper = text.toUpperCase();
+        const codeToCheck = pendingTgLogins[codeKey] || pendingTgLogins[codeKeyUpper];
+        
+        if (codeToCheck) {
+            const loginData = codeToCheck;
+            const actualCodeKey = pendingTgLogins[codeKey] ? codeKey : codeKeyUpper;
             
             // Проверка на срок действия кода
             if (Date.now() > loginData.timestamp) {
-                delete pendingTgLogins[text];
-                bot.sendMessage(chatId, `❌ Срок действия кода истек. Попробуйте снова зайти через лаунчер.`, { parse_mode: 'Markdown' });
+                delete pendingTgLogins[codeKey];
+                delete pendingTgLogins[codeKeyUpper];
+                bot.sendMessage(chatId, `❌ Срок действия кода истек. Попробуйте снова.`, { parse_mode: 'Markdown' });
                 return;
             }
 
-            // Верификация успешна
+            // Если это привязка 2FA
+            if (loginData.type === '2fa_setup') {
+                // Сохраняем chat_id в БД
+                db.run('UPDATE users SET telegram_chat_id = ?, two_factor_enabled = 1 WHERE username = ?', 
+                    [chatId.toString(), loginData.username], (err) => {
+                    if (err) {
+                        console.error('[TG 2FA] Ошибка сохранения chat_id:', err);
+                        bot.sendMessage(chatId, `❌ Ошибка при привязке Telegram. Попробуйте позже.`);
+                        return;
+                    }
+                    
+                    delete pendingTgLogins[codeKey];
+                    delete pendingTgLogins[codeKeyUpper];
+                    bot.sendMessage(chatId, 
+                        `✅ Telegram 2FA успешно привязана для аккаунта *${loginData.username}*!\n\n` +
+                        `Теперь при каждом входе вы будете получать код подтверждения через этот бот.`,
+                        { parse_mode: 'Markdown' }
+                    );
+                    console.log(`[TG 2FA] Telegram привязан для ${loginData.username}, chat_id: ${chatId}`);
+                });
+                return;
+            }
+
+            // Верификация успешна (обычный вход)
             loginData.chatId = chatId;
             loginData.tgUsername = msg.from.username; 
             
             // Удаляем старую запись и добавляем в обратный индекс
-            delete pendingTgLogins[text];
+            delete pendingTgLogins[codeKey];
+            delete pendingTgLogins[codeKeyUpper];
             pendingTgLoginsByChatId[chatId] = loginData;
 
             bot.sendMessage(chatId, 
@@ -70,19 +143,40 @@ if (bot) {
             return;
         }
 
-        // 2. Стандартный ответ
-        if (text === '/start') {
+        // 2. Команды бота
+        if (textLower === '/start') {
             bot.sendMessage(chatId, 
-                `Привет! Чтобы войти в лаунчер, введите в нем свой никнейм и следуйте инструкциям. ` +
-                `Лаунчер пришлет вам одноразовый код, который нужно отправить мне.`,
+                `👋 Привет! Я бот для двухфакторной аутентификации Horizon Launcher.\n\n` +
+                `📋 Доступные команды:\n` +
+                `• Отправьте код из лаунчера для входа\n` +
+                `• Отправьте код для привязки Telegram 2FA\n\n` +
+                `🔒 Для защиты аккаунта рекомендуется включить 2FA.`,
+                { parse_mode: 'Markdown' }
+            );
+        } else if (textLower === '/help') {
+            bot.sendMessage(chatId,
+                `📖 Помощь по использованию бота:\n\n` +
+                `1️⃣ **Вход в лаунчер:**\n` +
+                `   Введите свой никнейм в лаунчере, затем отправьте полученный код боту.\n\n` +
+                `2️⃣ **Привязка Telegram 2FA:**\n` +
+                `   В настройках лаунчера выберите "Telegram 2FA" и отправьте полученный код боту.\n\n` +
+                `3️⃣ **Получение кодов 2FA:**\n` +
+                `   После привязки вы будете получать коды подтверждения при каждом входе.`,
                 { parse_mode: 'Markdown' }
             );
         } else {
-             bot.sendMessage(chatId, "Неизвестная команда. Чтобы войти в лаунчер, отправьте мне код, который он сгенерирует.");
+            bot.sendMessage(chatId, 
+                `❓ Неизвестная команда.\n\n` +
+                `Отправьте код из лаунчера или используйте /help для справки.`,
+                { parse_mode: 'Markdown' }
+            );
         }
     });
 
-    // ... (Обработка ошибок Polling)
+    // Обработка ошибок Polling
+    bot.on('polling_error', (error) => {
+        console.error('[TG BOT] Polling error:', error);
+    });
 
     console.log(`🤖 Telegram Bot запущен и слушает входящие сообщения (Polling).`);
 } else {
@@ -139,29 +233,27 @@ app.post('/api/auth/register', (req, res) => {
         return res.status(400).json({ success: false, message: 'Логин и пароль обязательны.' });
     }
 
-    fs.readFile(USERS_DB_PATH, 'utf8', (err, data) => {
-        if (err && err.code !== 'ENOENT') {
-            console.error('[REGISTER] Ошибка чтения файла:', err);
-            return res.status(500).json({ success: false, message: 'Ошибка сервера при чтении базы данных.' });
+    // Проверяем, существует ли пользователь
+    db.get('SELECT id FROM users WHERE username = ?', [username], (err, row) => {
+        if (err) {
+            console.error('[REGISTER] Ошибка БД:', err);
+            return res.status(500).json({ success: false, message: 'Ошибка сервера при проверке пользователя.' });
         }
 
-        const users = data ? JSON.parse(data) : [];
-
-        if (users.find(user => user.username === username)) {
+        if (row) {
             return res.status(409).json({ success: false, message: 'Пользователь с таким именем уже существует.' });
         }
 
+        // Хэшируем пароль и сохраняем в БД
         bcrypt.hash(password, 10, (err, hashedPassword) => {
             if (err) {
                 console.error('[REGISTER] Ошибка хэширования пароля:', err);
                 return res.status(500).json({ success: false, message: 'Ошибка сервера при регистрации.' });
             }
 
-            users.push({ username, password: hashedPassword });
-
-            fs.writeFile(USERS_DB_PATH, JSON.stringify(users, null, 2), (err) => {
+            db.run('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword], function(err) {
                 if (err) {
-                    console.error('[REGISTER] Ошибка записи в файл:', err);
+                    console.error('[REGISTER] Ошибка сохранения в БД:', err);
                     return res.status(500).json({ success: false, message: 'Ошибка сервера при сохранении пользователя.' });
                 }
                 console.log(`[REGISTER] Пользователь ${username} успешно зарегистрирован.`);
@@ -174,30 +266,21 @@ app.post('/api/auth/register', (req, res) => {
 
 // --- 3. Маршрут: Вход по логину/паролю ---
 app.post('/api/auth/login', (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, twoFactorCode } = req.body;
 
     if (!username || !password) {
         return res.status(400).json({ success: false, message: 'Логин и пароль обязательны.' });
     }
 
-    fs.readFile(USERS_DB_PATH, 'utf8', (err, data) => {
-        if (err && err.code !== 'ENOENT') {
-            console.error('[LOGIN] Ошибка чтения файла:', err);
+    db.get('SELECT * FROM users WHERE username = ?', [username], (err, user) => {
+        if (err) {
+            console.error('[LOGIN] Ошибка БД:', err);
             return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
         }
-
-        const users = data ? JSON.parse(data) : [];
-        const user = users.find(u => u.username === username);
 
         if (!user) {
             return res.status(401).json({ success: false, message: 'Неверный логин или пароль.' });
         }
-
-        // --- ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ ДЛЯ ДИАГНОСТИКИ ---
-        console.log(`[DEBUG] Сравнение паролей для пользователя: ${username}`);
-        console.log(`[DEBUG]   - Пароль из запроса: ${password}`);
-        console.log(`[DEBUG]   - Хэш из файла: ${user.password}`);
-        // ------------------------------------------
 
         bcrypt.compare(password, user.password, (err, isMatch) => {
             if (err) {
@@ -205,12 +288,80 @@ app.post('/api/auth/login', (req, res) => {
                 return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
             }
 
-            if (isMatch) {
-                console.log(`[LOGIN] Пользователь ${username} успешно вошел в систему.`);
-                res.json({ success: true, token: `fake-auth-token-${Date.now()}`, username: user.username });
-            } else {
-                res.status(401).json({ success: false, message: 'Неверный логин или пароль.' });
+            if (!isMatch) {
+                return res.status(401).json({ success: false, message: 'Неверный логин или пароль.' });
             }
+
+            // Проверяем, включена ли 2FA
+            if (user.two_factor_enabled) {
+                // Если 2FA включена, проверяем код
+                if (!twoFactorCode) {
+                    // Если это Telegram 2FA, отправляем код через бота
+                    if (user.telegram_chat_id && bot) {
+                        const loginCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-значный код
+                        const expiresAt = Date.now() + 5 * 60 * 1000; // 5 минут
+                        
+                        // Сохраняем код для проверки
+                        pendingTgLogins[`login_${user.username}`] = {
+                            username: user.username,
+                            code: loginCode,
+                            timestamp: expiresAt,
+                            type: 'login_2fa'
+                        };
+                        
+                        // Отправляем код через Telegram
+                        bot.sendMessage(user.telegram_chat_id,
+                            `🔐 Код для входа в аккаунт *${user.username}*:\n\n` +
+                            `*${loginCode}*\n\n` +
+                            `Код действителен 5 минут.`,
+                            { parse_mode: 'Markdown' }
+                        ).catch(err => {
+                            console.error('[LOGIN 2FA] Ошибка отправки кода в Telegram:', err);
+                        });
+                    }
+                    
+                    return res.status(200).json({ 
+                        success: false, 
+                        requires2FA: true,
+                        message: user.telegram_chat_id 
+                            ? 'Код отправлен в Telegram. Введите его для входа.' 
+                            : 'Требуется код двухфакторной аутентификации.' 
+                    });
+                }
+
+                // Проверяем код в зависимости от типа 2FA
+                let codeValid = false;
+                if (user.google_secret) {
+                    // Проверка Google Authenticator
+                    codeValid = speakeasy.totp.verify({
+                        secret: user.google_secret,
+                        encoding: 'base32',
+                        token: twoFactorCode,
+                        window: 2
+                    });
+                } else if (user.telegram_chat_id) {
+                    // Проверка кода из Telegram
+                    const loginData = pendingTgLogins[`login_${user.username}`];
+                    if (loginData && loginData.type === 'login_2fa') {
+                        if (Date.now() <= loginData.timestamp && loginData.code === twoFactorCode) {
+                            codeValid = true;
+                            delete pendingTgLogins[`login_${user.username}`];
+                        }
+                    }
+                }
+
+                if (!codeValid) {
+                    return res.status(401).json({ success: false, message: 'Неверный код двухфакторной аутентификации.' });
+                }
+            }
+
+            console.log(`[LOGIN] Пользователь ${username} успешно вошел в систему.`);
+            res.json({ 
+                success: true, 
+                token: `fake-auth-token-${Date.now()}`, 
+                username: user.username,
+                has2FA: user.two_factor_enabled === 1
+            });
         });
     });
 });
@@ -269,6 +420,194 @@ app.post('/api/auth/poll_login', (req, res) => {
     });
 });
 
+
+// --- 5. Маршрут: Получить статус 2FA пользователя ---
+app.get('/api/user/2fa/status', (req, res) => {
+    const { username } = req.query;
+    
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'Имя пользователя обязательно.' });
+    }
+    
+    db.get('SELECT two_factor_enabled, telegram_chat_id, google_secret FROM users WHERE username = ?', [username], (err, user) => {
+        if (err) {
+            console.error('[2FA STATUS] Ошибка БД:', err);
+            return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+        }
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден.' });
+        }
+        
+        res.json({
+            success: true,
+            enabled: user.two_factor_enabled === 1,
+            hasTelegram: !!user.telegram_chat_id,
+            hasGoogle: !!user.google_secret
+        });
+    });
+});
+
+// --- 6. Маршрут: Настроить Google Authenticator 2FA ---
+app.post('/api/user/2fa/google/setup', async (req, res) => {
+    const { username } = req.body;
+    
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'Имя пользователя обязательно.' });
+    }
+    
+    // Генерируем секрет для Google Authenticator
+    const secret = speakeasy.generateSecret({
+        name: `Horizon (${username})`,
+        issuer: 'Horizon Launcher'
+    });
+    
+    // Генерируем QR-код
+    try {
+        const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
+        
+        // Сохраняем секрет в БД (временно, пока пользователь не подтвердит)
+        db.run('UPDATE users SET google_secret = ? WHERE username = ?', [secret.base32, username], (err) => {
+            if (err) {
+                console.error('[2FA GOOGLE] Ошибка сохранения секрета:', err);
+                return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+            }
+            
+            res.json({
+                success: true,
+                secret: secret.base32,
+                qrCode: qrCodeUrl,
+                manualEntryKey: secret.base32
+            });
+        });
+    } catch (err) {
+        console.error('[2FA GOOGLE] Ошибка генерации QR-кода:', err);
+        res.status(500).json({ success: false, message: 'Ошибка генерации QR-кода.' });
+    }
+});
+
+// --- 7. Маршрут: Подтвердить и включить Google Authenticator 2FA ---
+app.post('/api/user/2fa/google/verify', (req, res) => {
+    const { username, code } = req.body;
+    
+    if (!username || !code) {
+        return res.status(400).json({ success: false, message: 'Имя пользователя и код обязательны.' });
+    }
+    
+    db.get('SELECT google_secret FROM users WHERE username = ?', [username], (err, user) => {
+        if (err) {
+            console.error('[2FA GOOGLE VERIFY] Ошибка БД:', err);
+            return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+        }
+        
+        if (!user || !user.google_secret) {
+            return res.status(400).json({ success: false, message: '2FA не настроена для этого пользователя.' });
+        }
+        
+        const verified = speakeasy.totp.verify({
+            secret: user.google_secret,
+            encoding: 'base32',
+            token: code,
+            window: 2
+        });
+        
+        if (verified) {
+            // Включаем 2FA
+            db.run('UPDATE users SET two_factor_enabled = 1 WHERE username = ?', [username], (err) => {
+                if (err) {
+                    console.error('[2FA GOOGLE VERIFY] Ошибка обновления БД:', err);
+                    return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+                }
+                
+                res.json({ success: true, message: 'Google Authenticator 2FA успешно включена!' });
+            });
+        } else {
+            res.status(400).json({ success: false, message: 'Неверный код. Попробуйте снова.' });
+        }
+    });
+});
+
+// --- 8. Маршрут: Настроить Telegram 2FA ---
+app.post('/api/user/2fa/telegram/setup', (req, res) => {
+    const { username } = req.body;
+    
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'Имя пользователя обязательно.' });
+    }
+    
+    if (!bot) {
+        return res.status(503).json({ success: false, message: 'Telegram бот не настроен.' });
+    }
+    
+    // Генерируем код для привязки
+    const linkCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 минут
+    
+    // Сохраняем код для привязки (в обоих регистрах для удобства)
+    pendingTgLogins[linkCode.toLowerCase()] = {
+        username: username,
+        timestamp: expiresAt,
+        type: '2fa_setup'
+    };
+    pendingTgLogins[linkCode] = {
+        username: username,
+        timestamp: expiresAt,
+        type: '2fa_setup'
+    };
+    
+    // Получаем имя бота асинхронно
+    bot.getMe().then((botInfo) => {
+        res.json({
+            success: true,
+            linkCode: linkCode,
+            botUsername: botInfo.username,
+            message: `Отправьте код "${linkCode}" боту @${botInfo.username} для привязки Telegram 2FA. Код действителен 10 минут.`
+        });
+    }).catch((err) => {
+        console.error('[TELEGRAM 2FA SETUP] Ошибка получения информации о боте:', err);
+        res.json({
+            success: true,
+            linkCode: linkCode,
+            message: `Отправьте код "${linkCode}" боту для привязки Telegram 2FA. Код действителен 10 минут.`
+        });
+    });
+});
+
+// --- 9. Маршрут: Отключить 2FA ---
+app.post('/api/user/2fa/disable', (req, res) => {
+    const { username, password } = req.body;
+    
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: 'Имя пользователя и пароль обязательны.' });
+    }
+    
+    db.get('SELECT password FROM users WHERE username = ?', [username], (err, user) => {
+        if (err) {
+            console.error('[2FA DISABLE] Ошибка БД:', err);
+            return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+        }
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден.' });
+        }
+        
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err || !isMatch) {
+                return res.status(401).json({ success: false, message: 'Неверный пароль.' });
+            }
+            
+            // Отключаем 2FA и очищаем секреты
+            db.run('UPDATE users SET two_factor_enabled = 0, google_secret = NULL, telegram_chat_id = NULL WHERE username = ?', [username], (err) => {
+                if (err) {
+                    console.error('[2FA DISABLE] Ошибка обновления БД:', err);
+                    return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+                }
+                
+                res.json({ success: true, message: '2FA успешно отключена.' });
+            });
+        });
+    });
+});
 
 // Запуск сервера
 app.listen(PORT, () => {

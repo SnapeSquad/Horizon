@@ -9,7 +9,7 @@ let aboutWindow;
 let authenticatedUser = null;
 
 // --- Утилита для выполнения сетевых запросов ---
-function makeRequest(url, options, postData) {
+function makeRequest(options, postData) {
     return new Promise((resolve, reject) => {
         const request = net.request(options);
         request.on('response', (response) => {
@@ -40,7 +40,6 @@ function createAuthWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            enableRemoteModule: false,
         }
     });
     authWindow.loadFile(path.join(__dirname, 'auth.html'));
@@ -56,7 +55,6 @@ function createMainWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            enableRemoteModule: false,
         }
     });
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
@@ -99,7 +97,7 @@ ipcMain.handle('login-request', async (event, credentials) => {
             'Content-Length': Buffer.byteLength(postData)
         }
     };
-    return makeRequest(options.path, options, postData);
+    return makeRequest(options, postData);
 });
 
 // Запрос на регистрацию
@@ -116,7 +114,7 @@ ipcMain.handle('register-request', async (event, credentials) => {
             'Content-Length': Buffer.byteLength(postData)
         }
     };
-    return makeRequest(options.path, options, postData);
+    return makeRequest(options, postData);
 });
 
 // Открытие внешних ссылок
@@ -155,26 +153,36 @@ ipcMain.handle('launch-game', async (event, options) => {
         },
     };
 
-    launcher.launch(launchOptions);
+    // Удаляем старые обработчики событий перед добавлением новых, чтобы избежать накопления
+    launcher.removeAllListeners('debug');
+    launcher.removeAllListeners('data');
+    launcher.removeAllListeners('progress');
+    launcher.removeAllListeners('close');
 
     launcher.on('debug', (e) => console.log('[DEBUG]', e));
     launcher.on('data', (e) => console.log('[DATA]', e));
     launcher.on('progress', (e) => {
-        mainWindow.webContents.send('launch-progress', {
-            type: e.type,
-            task: e.task,
-            total: e.total,
-            loaded: e.loaded
-        });
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('launch-progress', {
+                type: e.type,
+                task: e.task,
+                total: e.total,
+                loaded: e.loaded
+            });
+        }
     });
 
     launcher.on('close', (e) => {
-        if (e === 0) {
-            mainWindow.webContents.send('launch-success');
-        } else {
-            mainWindow.webContents.send('launch-error', `Игра закрылась с кодом ошибки: ${e}`);
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            if (e === 0) {
+                mainWindow.webContents.send('launch-success');
+            } else {
+                mainWindow.webContents.send('launch-error', `Игра закрылась с кодом ошибки: ${e}`);
+            }
         }
     });
+
+    launcher.launch(launchOptions);
 
     return { success: true };
 });

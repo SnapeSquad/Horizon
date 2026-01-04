@@ -63,17 +63,26 @@
                     </div>
                 </div>
                 <div id="notifications-page" class="page" style="display: none;">
-                    <h2>Двухфакторная аутентификация</h2>
-                    <p>Защитите свой аккаунт с помощью двухфакторной аутентификации.</p>
-                    <div class="tfa-options">
-                        <button class="tfa-option">
-                            <i class="fab fa-telegram-plane"></i>
-                            <span>Telegram</span>
-                        </button>
-                        <button class="tfa-option">
-                            <i class="fab fa-google"></i>
-                            <span>Google Authenticator</span>
-                        </button>
+                    <div id="notifications-container">
+                        <!-- Уведомления будут добавляться динамически -->
+                    </div>
+                    <div class="tfa-section">
+                        <h2>Двухфакторная аутентификация</h2>
+                        <p>Защитите свой аккаунт с помощью двухфакторной аутентификации.</p>
+                        <div id="2fa-status" class="tfa-status"></div>
+                        <div class="tfa-options">
+                            <button class="tfa-option" id="telegram-2fa-btn">
+                                <i class="fab fa-telegram-plane"></i>
+                                <span>Telegram</span>
+                            </button>
+                            <button class="tfa-option" id="google-2fa-btn">
+                                <i class="fab fa-google"></i>
+                                <span>Google Authenticator</span>
+                            </button>
+                        </div>
+                        <div id="2fa-setup-container" class="tfa-setup" style="display: none;">
+                            <!-- Контейнер для настройки 2FA -->
+                        </div>
                     </div>
                 </div>
             </section>

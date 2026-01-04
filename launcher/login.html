@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Horizon Launcher</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 24px;
+        }
+        .form-container h2 {
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px 16px 55px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            background: rgba(0,0,0,0.2);
+            color: #fff;
+        }
+        .input-group input:focus {
+            outline: none;
+            background: rgba(0,0,0,0.3);
+        }
+        .form-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+        .toggle-form {
+            margin-top: 20px;
+            color: #c0c0c0;
+        }
+        .toggle-form a {
+            color: #a7b3ff;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div id="login-form-container" class="form-container glass-effect">
+            <h2>Вход в аккаунт</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <i data-lucide="user"></i>
+                    <input type="text" id="login-username" placeholder="Имя пользователя" required>
+                </div>
+                <div class="input-group">
+                    <i data-lucide="lock"></i>
+                    <input type="password" id="login-password" placeholder="Пароль" required>
+                </div>
+                <button type="submit" class="form-btn play-btn">Войти</button>
+            </form>
+            <p class="toggle-form">Нет аккаунта? <a id="show-register">Зарегистрироваться</a></p>
+        </div>
+
+        <div id="register-form-container" class="form-container glass-effect" style="display: none;">
+            <h2>Создание аккаунта</h2>
+            <form id="register-form">
+                <div class="input-group">
+                    <i data-lucide="user"></i>
+                    <input type="text" id="register-username" placeholder="Имя пользователя" required>
+                </div>
+                <div class="input-group">
+                    <i data-lucide="lock"></i>
+                    <input type="password" id="register-password" placeholder="Пароль" required>
+                </div>
+                <button type="submit" class="form-btn play-btn">Создать</button>
+            </form>
+            <p class="toggle-form">Уже есть аккаунт? <a id="show-login">Войти</a></p>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

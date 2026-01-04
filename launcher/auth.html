@@ -12,7 +12,11 @@
             <h2>Вход</h2>
             <input type="text" id="login-username" placeholder="Имя пользователя">
             <input type="password" id="login-password" placeholder="Пароль">
+            <div id="2fa-code-container" style="display: none;">
+                <input type="text" id="login-2fa-code" placeholder="Код 2FA (6 цифр)" maxlength="6">
+            </div>
             <button id="login-btn">Войти</button>
+            <p class="tfa-hint">💡 Рекомендуем включить двухфакторную аутентификацию для защиты аккаунта</p>
             <p>Нет аккаунта? <a href="#" id="show-register">Регистрация</a></p>
         </div>
         <div id="register-view" class="auth-view">
@@ -20,6 +24,7 @@
             <input type="text" id="register-username" placeholder="Имя пользователя">
             <input type="password" id="register-password" placeholder="Пароль">
             <button id="register-btn">Зарегистрироваться</button>
+            <p class="tfa-hint">💡 После регистрации рекомендуем настроить двухфакторную аутентификацию в разделе "Уведомления"</p>
             <p>Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
         </div>
     </div>
