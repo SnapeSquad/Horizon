@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="horizoncosmetics"
+version="1.0.0"
+displayName="Horizon Cosmetics"
+description='''
+Cosmetics mod for Horizon Launcher.
+Displays custom cosmetics (wings, capes, particles) loaded from the Horizon API.
+'''
+authors="Horizon Team"
+displayURL="https://horizon-launcher.com"
+
+[[dependencies.horizoncosmetics]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.horizoncosmetics]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.20.2)"
+    ordering="NONE"
+    side="CLIENT"
+

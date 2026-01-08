@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Цветовая палитра из Figma - Horizon Launcher",
+  "colors": {
+    "launcher": {
+      "bg": "#0F0F13",
+      "accent": "#7C4DFF",
+      "text": "#E0E0E0",
+      "textSecondary": "#9CA3AF",
+      "border": "rgba(124, 77, 255, 0.2)",
+      "card": "rgba(255, 255, 255, 0.05)",
+      "cardHover": "rgba(255, 255, 255, 0.08)",
+      "description": "Основные цвета лаунчера из Figma"
+    },
+    "primary": {
+      "main": "#7C4DFF",
+      "light": "rgba(124, 77, 255, 0.2)",
+      "dark": "rgba(124, 77, 255, 0.8)",
+      "description": "Основной акцентный цвет"
+    },
+    "background": {
+      "primary": "#0F0F13",
+      "secondary": "rgba(0, 0, 0, 0.3)",
+      "glass": "rgba(255, 255, 255, 0.05)",
+      "description": "Фоновые цвета"
+    },
+    "text": {
+      "primary": "#E0E0E0",
+      "secondary": "#9CA3AF",
+      "tertiary": "rgba(255, 255, 255, 0.8)",
+      "disabled": "rgba(255, 255, 255, 0.5)",
+      "description": "Цвета текста"
+    },
+    "border": {
+      "default": "rgba(124, 77, 255, 0.2)",
+      "hover": "rgba(124, 77, 255, 0.3)",
+      "focus": "rgba(124, 77, 255, 0.8)",
+      "description": "Цвета границ"
+    },
+    "accent": {
+      "success": "#2ecc71",
+      "error": "#d4183d",
+      "warning": "#f39c12",
+      "info": "#3498db",
+      "description": "Акцентные цвета для состояний"
+    }
+  },
+  "usage": {
+    "electron": "Используйте значения напрямую в CSS",
+    "javafx": "Конвертируйте в JavaFX формат (см. styles/javafx/figma-theme.css)"
+  }
+}
+

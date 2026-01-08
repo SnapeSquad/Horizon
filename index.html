@@ -2,97 +2,20 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Мой Лаунчер</title>
-    <style>
-        /* Базовые стили для разделения лаунчера на 2 части */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-        .sidebar {
-            width: 200px;
-            background-color: #2c3e50; /* Темный фон для навигации */
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            background-color: #ecf0f1; /* Светлый фон для контента */
-            display: flex;
-            flex-direction: column;
-        }
-        .nav-button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: none;
-            border: 1px solid #3498db;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .nav-button:hover {
-            background-color: #3498db;
-        }
-        #login-form, #play-button-container {
-            margin-top: auto; 
-            padding-top: 20px;
-            border-top: 1px solid #34495e;
-            width: 100%;
-        }
-        input {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 3px;
-            border: 1px solid #bdc3c7;
-        }
-        button#play-button {
-            width: 100%;
-            padding: 15px;
-            background-color: #2ecc71; 
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button#play-button:hover {
-            background-color: #27ae60;
-        }
-        button#auth-button, button#tg-auth-button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 5px;
-            background-color: #e67e22; 
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button#tg-auth-button {
-            background-color: #3498db; 
-        }
-    </style>
+    <title>Horizon Launcher</title>
+    <link rel="stylesheet" href="design/styles/electron/figma-theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="sidebar">
-        <h2>🚀 Мой Лаунчер</h2>
-        
-        <button class="nav-button">📰 Новости</button>
-        <button class="nav-button">💻 Серверы</button>
-        <button class="nav-button">✨ Кастомизация</button>
+        <button class="nav-button active" title="Главная">🏠</button>
+        <button class="nav-button" title="Магазин">🛍️</button>
+        <button class="nav-button" title="Гардероб">👕</button>
+        <button class="nav-button" title="Форум">💬</button>
+        <button class="nav-button" title="Настройки">⚙️</button>
 
         <div id="login-form">
             <h3>Вход</h3>

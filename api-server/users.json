@@ -1,7 +1,6 @@
 [
   {
     "username": "finaltest",
-<<<<<<< HEAD
     "password": "$2b$10$YCLd9qlon7hYxGxn7fLGMuk6N2JocePtMLYbYl9utHX9kARK2dlmi"
   },
   {
@@ -11,8 +10,5 @@
   {
     "username": "bantiks_YTNC",
     "password": "$2b$10$fzA183b408Zpn8S71rW1redHsAeKsz.22QvZAX.IpDfB2f8n9BpKa"
-=======
-    "password": "$2b$10$VUtxv19ccPzmhfdq6JYnnOwkjK378VBoLpv9QrhwCV7VrJIiYdcTe"
->>>>>>> 0e800cdc67d6b53feacf26dc79738c3e9fc8d628
   }
 ]

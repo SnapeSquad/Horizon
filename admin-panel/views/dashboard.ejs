@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Horizon Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container">
+        <%- include('partials/sidebar') %>
+        
+        <main class="content">
+            <h1>📊 Панель управления</h1>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3><%= stats.users %></h3>
+                        <p>Пользователей</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📰</div>
+                    <div class="stat-info">
+                        <h3><%= stats.news %></h3>
+                        <p>Новостей</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-info">
+                        <h3><%= stats.shopItems %></h3>
+                        <p>Товаров</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-info">
+                        <h3><%= stats.forumTopics %></h3>
+                        <p>Тем на форуме</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3><%= stats.revenue %> ₽</h3>
+                        <p>Доход</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>Быстрые действия</h2>
+                <div class="actions-grid">
+                    <a href="/news" class="action-btn">
+                        <span>📰</span>
+                        <p>Создать новость</p>
+                    </a>
+                    <a href="/shop" class="action-btn">
+                        <span>➕</span>
+                        <p>Добавить товар</p>
+                    </a>
+                    <a href="/users" class="action-btn">
+                        <span>👥</span>
+                        <p>Управление пользователями</p>
+                    </a>
+                    <a href="/forum" class="action-btn">
+                        <span>🛡️</span>
+                        <p>Модерация форума</p>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/main.js"></script>
+</body>
+</html>
+

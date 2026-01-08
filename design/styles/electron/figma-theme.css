@@ -1,0 +1,341 @@
+/**
+ * Figma Design Theme для Electron версии
+ * Основано на реальном дизайне из Figma
+ * Цвета: #0F0F13 (фон), #7C4DFF (акцент), #E0E0E0 (текст)
+ */
+
+/* CSS переменные из Figma дизайна */
+:root {
+  /* Основные цвета лаунчера */
+  --launcher-bg: #0F0F13;
+  --launcher-accent: #7C4DFF;
+  --launcher-text: #E0E0E0;
+  --launcher-text-secondary: #9CA3AF;
+  --launcher-border: rgba(124, 77, 255, 0.2);
+  --launcher-card: rgba(255, 255, 255, 0.05);
+  --launcher-card-hover: rgba(255, 255, 255, 0.08);
+  
+  /* Отступы */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  
+  /* Радиусы */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  
+  /* Шрифты */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  
+  /* Эффекты */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --glow-accent: 0 0 20px rgba(124, 77, 255, 0.5);
+}
+
+/* Базовые стили */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--launcher-text);
+  background: var(--launcher-bg);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Сайдбар */
+.sidebar {
+  width: 80px;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 1px solid var(--launcher-border);
+  padding: var(--spacing-2xl) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xl);
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+/* Навигационные кнопки */
+.nav-button {
+  width: 48px;
+  height: 48px;
+  padding: var(--spacing-lg);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  color: var(--launcher-text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.nav-button:hover {
+  background: rgba(124, 77, 255, 0.1);
+  color: var(--launcher-accent);
+  transform: scale(1.1);
+}
+
+.nav-button.active {
+  background: rgba(124, 77, 255, 0.2);
+  color: var(--launcher-accent);
+  filter: drop-shadow(0 0 10px rgba(124, 77, 255, 0.8));
+}
+
+.nav-button.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--launcher-accent);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Контентная область */
+.content {
+  flex: 1;
+  padding: var(--spacing-2xl);
+  margin-left: 80px;
+  background: var(--launcher-bg);
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* Карточки */
+.card {
+  background: var(--launcher-card);
+  border: 1px solid var(--launcher-border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+  background: var(--launcher-card-hover);
+  border-color: rgba(124, 77, 255, 0.4);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Кнопки */
+.btn {
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family);
+}
+
+.btn-primary {
+  background: var(--launcher-accent);
+  color: white;
+  box-shadow: var(--glow-accent);
+}
+
+.btn-primary:hover {
+  background: rgba(124, 77, 255, 0.9);
+  box-shadow: 0 0 30px rgba(124, 77, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--launcher-card);
+  color: var(--launcher-text);
+  border: 1px solid var(--launcher-border);
+}
+
+.btn-secondary:hover {
+  background: var(--launcher-card-hover);
+  border-color: rgba(124, 77, 255, 0.4);
+}
+
+/* Поля ввода */
+input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--launcher-border);
+  background: var(--launcher-card);
+  color: var(--launcher-text);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  transition: all 0.3s ease;
+}
+
+input::placeholder {
+  color: var(--launcher-text-secondary);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--launcher-accent);
+  background: var(--launcher-card-hover);
+  box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.1);
+}
+
+/* Заголовки */
+h1, .title {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  color: var(--launcher-text);
+  margin-bottom: var(--spacing-lg);
+}
+
+h2, .subtitle {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  color: var(--launcher-text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+h3 {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--launcher-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Форма входа */
+#login-form {
+  margin-top: auto;
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--launcher-border);
+  width: 100%;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+#login-form h3 {
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+#login-form input {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Кнопка Play */
+#play-button {
+  width: 100%;
+  padding: 16px;
+  background: var(--launcher-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--glow-accent);
+}
+
+#play-button:hover:not(:disabled) {
+  background: rgba(124, 77, 255, 0.9);
+  box-shadow: 0 0 30px rgba(124, 77, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+#play-button:disabled {
+  background: var(--launcher-card);
+  color: var(--launcher-text-secondary);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Кнопки авторизации */
+#auth-button, #tg-auth-button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: var(--spacing-sm);
+  background: var(--launcher-card);
+  color: var(--launcher-text);
+  border: 1px solid var(--launcher-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#auth-button:hover, #tg-auth-button:hover {
+  background: var(--launcher-card-hover);
+  border-color: rgba(124, 77, 255, 0.4);
+}
+
+#tg-auth-button {
+  background: rgba(124, 77, 255, 0.1);
+  border-color: var(--launcher-accent);
+}
+
+#tg-auth-button:hover {
+  background: rgba(124, 77, 255, 0.2);
+}
+
+/* Скроллбар */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--launcher-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--launcher-card);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--launcher-card-hover);
+}
+
+/* Утилиты */
+.text-center {
+  text-align: center;
+}
+
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }

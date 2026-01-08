@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.horizon.launcher.ui.glass.GlassMainController">
+    
+    <!-- Layer 1: Gradient background (will be set programmatically) -->
+    <Rectangle width="1400" height="900" fx:id="backgroundGradient" fill="BLACK" />
+    
+    <!-- Optional: Background Image (will be loaded in controller if available) -->
+    <!-- ImageView is loaded programmatically to avoid FXML LoadException -->
+    
+    <!-- Layer 2: Dark overlay для контраста -->
+    <Rectangle width="1400" height="900" opacity="0.4" fill="BLACK" />
+    
+    <!-- Layer 3: Main UI Container -->
+    <AnchorPane fx:id="mainContainer" prefWidth="1400" prefHeight="900">
+        
+        <!-- Window Controls (Top Right) -->
+        <HBox alignment="TOP_RIGHT" spacing="8" AnchorPane.topAnchor="15" AnchorPane.rightAnchor="15">
+            <padding>
+                <Insets top="5" right="5" bottom="5" left="5" />
+            </padding>
+            
+            <!-- Minimize Button -->
+            <Button fx:id="minimizeBtn" onAction="#handleMinimize" styleClass="window-control-btn">
+                <graphic>
+                    <FontIcon iconLiteral="fas-minus" iconSize="12" />
+                </graphic>
+            </Button>
+            
+            <!-- Maximize Button -->
+            <Button fx:id="maximizeBtn" onAction="#handleMaximize" styleClass="window-control-btn">
+                <graphic>
+                    <FontIcon iconLiteral="fas-expand" iconSize="12" />
+                </graphic>
+            </Button>
+            
+            <!-- Close Button -->
+            <Button fx:id="closeBtn" onAction="#handleClose" styleClass="window-control-btn-close">
+                <graphic>
+                    <FontIcon iconLiteral="fas-times" iconSize="14" />
+                </graphic>
+            </Button>
+        </HBox>
+        
+        <!-- Central Glass Login Box -->
+        <StackPane fx:id="glassLoginBox" alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            
+            <!-- Glass Panel Container -->
+            <VBox alignment="CENTER" spacing="30" styleClass="glass-panel" maxWidth="450" maxHeight="600">
+                <padding>
+                    <Insets top="50" right="50" bottom="50" left="50" />
+                </padding>
+                
+                <!-- Logo/Title Area -->
+                <VBox alignment="CENTER" spacing="15">
+                    <Label text="HORIZON" styleClass="app-title" />
+                    <Label text="Minecraft Launcher" styleClass="app-subtitle" />
+                </VBox>
+                
+                <!-- Login Form -->
+                <VBox alignment="CENTER" spacing="20" styleClass="login-form">
+                    
+                    <!-- Переключатель режима -->
+                    <HBox alignment="CENTER" spacing="10">
+                        <ToggleButton fx:id="licenseToggle" text="Лицензия" styleClass="mode-toggle" selected="true" prefWidth="170" prefHeight="40" />
+                        <ToggleButton fx:id="crackToggle" text="Пиратка" styleClass="mode-toggle" prefWidth="170" prefHeight="40" />
+                    </HBox>
+                    
+                    <!-- Username Field -->
+                    <TextField fx:id="usernameField" promptText="Имя пользователя" styleClass="ios-input" prefWidth="350" prefHeight="50" />
+                    
+                    <!-- Password Field -->
+                    <PasswordField fx:id="passwordField" promptText="Пароль" styleClass="ios-input" prefWidth="350" prefHeight="50" />
+                    
+                    <!-- 2FA Field (initially hidden) -->
+                    <TextField fx:id="twoFactorField" promptText="Код 2FA" styleClass="ios-input" prefWidth="350" prefHeight="50" visible="false" managed="false" />
+                    
+                    <!-- Login Button -->
+                    <Button fx:id="loginButton" text="Войти" styleClass="ios-button" prefWidth="350" prefHeight="55" />
+                    
+                    <!-- Microsoft Login Button (только для лицензии) -->
+                    <Button fx:id="microsoftButton" text="Войти через Microsoft" styleClass="microsoft-button" prefWidth="350" prefHeight="55" visible="true" managed="true">
+                        <graphic>
+                            <Label text="🪟" style="-fx-font-size: 20px;" />
+                        </graphic>
+                    </Button>
+                    
+                    <!-- Register Link (только для пиратки) -->
+                    <Hyperlink fx:id="registerLink" text="Создать аккаунт" styleClass="register-link" visible="false" managed="false" />
+                </VBox>
+                
+                <!-- Footer -->
+                <VBox alignment="CENTER" spacing="5">
+                    <Label text="Version 1.0.0" styleClass="version-text" />
+                </VBox>
+            </VBox>
+            
+        </StackPane>
+        
+    </AnchorPane>
+    
+</StackPane>
+

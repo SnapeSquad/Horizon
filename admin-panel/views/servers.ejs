@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Серверы | Horizon Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container">
+        <%- include('partials/sidebar') %>
+        
+        <main class="content">
+            <h1>🖥️ Управление серверами</h1>
+            
+            <div class="stats-grid mb-6">
+                <div class="stat-card">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-info">
+                        <h3 id="serversOnline">2</h3>
+                        <p>Серверов онлайн</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="totalPlayers">336</h3>
+                        <p>Игроков онлайн</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>Список серверов</h2>
+                
+                <div class="servers-list" id="serversList">
+                    <!-- Данные загружаются через AJAX -->
+                </div>
+                
+                <button id="addServerBtn" class="btn btn-primary mt-4">Добавить сервер</button>
+            </div>
+            
+            <div class="panel mt-6">
+                <h2>Конфигурация серверов</h2>
+                <p class="text-gray-400 mb-4">Отредактируйте файл <code>api-server/server.js</code> для изменения настроек серверов:</p>
+                
+                <pre style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; overflow-x: auto;">
+const servers = [
+    {
+        id: 'survival',
+        name: 'Survival',
+        ip: 'ВАYШ_IP',  // ← Изменить
+        port: 25565,
+        version: '1.20.1',
+        maxPlayers: 500
+    },
+    {
+        id: 'creative',
+        name: 'Creative',
+        ip: 'ВАШ_IP',  // ← Изменить
+        port: 25565,
+        version: '1.20.1',
+        maxPlayers: 200
+    }
+];</pre>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/servers.js"></script>
+</body>
+</html>
+

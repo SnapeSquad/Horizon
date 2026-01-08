@@ -1,0 +1,29 @@
+<aside class="sidebar">
+    <nav>
+        <a href="/dashboard" class="nav-item <%= locals.page === 'dashboard' ? 'active' : '' %>">
+            📊 Dashboard
+        </a>
+        <a href="/users" class="nav-item <%= locals.page === 'users' ? 'active' : '' %>">
+            👥 Пользователи
+        </a>
+        <a href="/servers" class="nav-item <%= locals.page === 'servers' ? 'active' : '' %>">
+            🖥️ Серверы
+        </a>
+        <a href="/news" class="nav-item <%= locals.page === 'news' ? 'active' : '' %>">
+            📰 Новости
+        </a>
+        <a href="/shop" class="nav-item <%= locals.page === 'shop' ? 'active' : '' %>">
+            🛒 Магазин
+        </a>
+        <a href="/forum" class="nav-item <%= locals.page === 'forum' ? 'active' : '' %>">
+            💬 Форум
+        </a>
+        <a href="/payments" class="nav-item <%= locals.page === 'payments' ? 'active' : '' %>">
+            💳 Платежи
+        </a>
+        <a href="/transactions" class="nav-item <%= locals.page === 'transactions' ? 'active' : '' %>">
+            💰 Транзакции
+        </a>
+    </nav>
+</aside>
+

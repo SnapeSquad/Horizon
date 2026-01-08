@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пользователи | Horizon Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <div class="container">
+        <%- include('partials/sidebar') %>
+        
+        <main class="content">
+            <h1>👥 Управление пользователями</h1>
+            
+            <div class="panel">
+                <div class="flex-between mb-4">
+                    <input type="text" id="searchUser" placeholder="Поиск пользователей..." class="search-input">
+                    <button id="addUserBtn" class="btn btn-primary">Добавить пользователя</button>
+                </div>
+                
+                <table id="usersTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Никнейм</th>
+                            <th>Роль</th>
+                            <th>Валюта</th>
+                            <th>2FA</th>
+                            <th>Регистрация</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersBody">
+                        <!-- Данные загружаются через AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/users.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,478 @@
+/**
+ * Figma Design Theme для JavaFX версии
+ * Основано на реальном дизайне из Figma
+ * Цвета: #0F0F13 (фон), #7C4DFF (акцент), #E0E0E0 (текст)
+ * 
+ * ВАЖНО: JavaFX использует свой синтаксис CSS с префиксом -fx-
+ */
+
+/* Базовые стили */
+.root {
+    -fx-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: #E0E0E0;
+    -fx-background-color: #0F0F13;
+}
+
+/* Фон приложения */
+.animated-background {
+    -fx-background-color: #0F0F13;
+}
+
+/* Фон для root и всех панелей */
+.root {
+    -fx-background-color: #0F0F13;
+}
+
+StackPane {
+    -fx-background-color: #0F0F13;
+}
+
+AnchorPane {
+    -fx-background-color: transparent;
+}
+
+/* Сайдбар */
+.sidebar {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 0 1 0 0;
+}
+
+/* Навигационные кнопки */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 16;
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 16px;
+    -fx-padding: 16;
+    -fx-cursor: hand;
+    -fx-min-width: 48;
+    -fx-min-height: 48;
+    -fx-max-width: 48;
+    -fx-max-height: 48;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(124, 77, 255, 0.1);
+    -fx-text-fill: #7C4DFF;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.nav-button:selected {
+    -fx-background-color: rgba(124, 77, 255, 0.2);
+    -fx-text-fill: #7C4DFF;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.8), 10, 0, 0, 0);
+}
+
+/* Кнопки */
+.btn-primary {
+    -fx-background-color: #7C4DFF;
+    -fx-background-radius: 12;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-padding: 12 24;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.5), 15, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: rgba(124, 77, 255, 0.9);
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.7), 20, 0, 0, 0);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.btn-primary:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.btn-secondary {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-padding: 12 24;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(124, 77, 255, 0.4);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Поля ввода */
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 16px;
+    -fx-padding: 12 16;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+}
+
+.input-field:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.3), 10, 0, 0, 0);
+}
+
+/* Карточки */
+.card {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-padding: 24;
+}
+
+.card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(124, 77, 255, 0.4);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 16, 0, 0, 4);
+}
+
+/* Заголовки */
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #E0E0E0;
+}
+
+.subtitle {
+    -fx-font-size: 18px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #9CA3AF;
+}
+
+/* Контентная область */
+.content-area {
+    -fx-background-color: #0F0F13;
+}
+
+/* Прогресс-бар */
+.progress-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.progress-bar .bar {
+    -fx-background-color: #7C4DFF;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.5), 10, 0, 0, 0);
+}
+
+/* Скролл-панель */
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 4;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 4;
+}
+
+.scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Текстовая область */
+.text-area {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 14px;
+    -fx-padding: 12 16;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+}
+
+.text-area .content {
+    -fx-background-color: transparent;
+}
+
+.text-area:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 2;
+}
+
+/* Комбобокс */
+.combo-box {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+}
+
+.combo-box:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+.combo-box:focused {
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 2;
+}
+
+/* Чекбокс */
+.check-box {
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 14px;
+}
+
+.check-box .box {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 4;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #7C4DFF;
+    -fx-border-color: #7C4DFF;
+}
+
+.check-box .mark {
+    -fx-background-color: white;
+}
+
+/* Радио-кнопка */
+.radio-button {
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 16px;
+    -fx-padding: 10 20;
+}
+
+.radio-button .radio {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 50%;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-radius: 50%;
+    -fx-border-width: 2;
+}
+
+.radio-button:selected .radio {
+    -fx-background-color: #7C4DFF;
+    -fx-border-color: #7C4DFF;
+}
+
+.radio-button .dot {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+}
+
+/* Управление окном */
+.window-control-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 8;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 18px;
+    -fx-font-weight: 500;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-min-width: 40;
+    -fx-min-height: 32;
+}
+
+.window-control-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.window-control-btn-close:hover {
+    -fx-background-color: rgba(212, 24, 61, 0.8);
+}
+
+/* Стеклянный эффект */
+.glass-effect {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    /* JavaFX не поддерживает backdrop-filter, используем только эффекты */
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
+}
+
+/* Glass Panel - главная панель входа */
+.glass-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-background-radius: 24;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 30, 0, 0, 8);
+}
+
+/* Заголовок приложения */
+.app-title {
+    -fx-font-size: 48px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #7C4DFF;
+    /* JavaFX не поддерживает linear-gradient в text-fill, используем эффект свечения */
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.8), 25, 0, 0, 0),
+                dropshadow(gaussian, rgba(0, 212, 255, 0.6), 30, 0, 0, 0);
+}
+
+.app-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #9CA3AF;
+}
+
+/* Форма входа */
+.login-form {
+    -fx-spacing: 20;
+}
+
+/* iOS стиль для полей ввода */
+.ios-input {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-text-fill: #E0E0E0;
+    -fx-font-size: 16px;
+    -fx-padding: 12 16;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-prompt-text-fill: #9CA3AF;
+}
+
+.ios-input:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.3), 10, 0, 0, 0);
+}
+
+/* iOS стиль для кнопок */
+.ios-button {
+    -fx-background-color: linear-gradient(to right, #7C4DFF 0%, #00D4FF 100%);
+    -fx-background-radius: 16;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-padding: 16 32;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.5), 20, 0, 0, 4);
+    -fx-cursor: hand;
+}
+
+.ios-button:hover {
+    -fx-background-color: linear-gradient(to right, #8C5DFF 0%, #10E4FF 100%);
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.7), 25, 0, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.ios-button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.4), 15, 0, 0, 2);
+}
+
+/* Ссылка регистрации */
+.register-link {
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 14px;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+
+.register-link:hover {
+    -fx-text-fill: #7C4DFF;
+}
+
+/* Текст версии */
+.version-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9CA3AF;
+    -fx-opacity: 0.7;
+}
+
+/* Переключатель режимов (Лицензия/Пиратка) */
+.mode-toggle {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-padding: 10 20;
+    -fx-border-color: rgba(124, 77, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-cursor: hand;
+}
+
+.mode-toggle:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(124, 77, 255, 0.4);
+}
+
+.mode-toggle:selected {
+    -fx-background-color: rgba(124, 77, 255, 0.3);
+    -fx-text-fill: #7C4DFF;
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(124, 77, 255, 0.5), 10, 0, 0, 0);
+}
+
+/* Microsoft кнопка */
+.microsoft-button {
+    -fx-background-color: linear-gradient(to right, #00A4EF 0%, #0078D4 100%);
+    -fx-background-radius: 16;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-padding: 16 32;
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.4), 20, 0, 0, 4);
+    -fx-cursor: hand;
+}
+
+.microsoft-button:hover {
+    -fx-background-color: linear-gradient(to right, #0078D4 0%, #00A4EF 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.6), 25, 0, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.microsoft-button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.3), 15, 0, 0, 2);
+}
