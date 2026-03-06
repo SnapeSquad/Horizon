@@ -4,6 +4,13 @@
   "description": "Horizon Minecraft Launcher built with Electron",
   "main": "launcher/main.js",
   "scripts": {
+    "setup": "powershell -ExecutionPolicy Bypass -File scripts/bootstrap.ps1",
+    "verify": "powershell -ExecutionPolicy Bypass -File scripts/verify.ps1",
+    "dev:api": "npm --prefix api-server start",
+    "dev:admin": "npm --prefix admin-panel run dev -- --host",
+    "dev:launcher": "mvn -f launcher-java/pom.xml javafx:run",
+    "dev:all": "powershell -ExecutionPolicy Bypass -File scripts/dev-all.ps1",
+    "dev:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-dev.ps1",
     "start": "electron .",
     "build": "electron-builder --win --publish always"
   },

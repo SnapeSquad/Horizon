@@ -42,6 +42,8 @@ cd horizon-launcher
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/bootstrap.ps1
+# или
+npm run setup
 ```
 
 #### 3. Настройка API сервера
@@ -89,6 +91,36 @@ java -jar target/horizon-launcher-1.0.0.jar
 ```
 
 **Примечание:** Перед запуском убедитесь, что API сервер запущен на `http://localhost:3000`
+
+## ⚡ Запуск всего проекта и мгновенная проверка
+
+### 1. Полная проверка проекта одной командой
+
+```powershell
+npm run verify
+```
+
+Что проверяется:
+- API smoke (auth + cosmetics + payment + forum)
+- сборка admin-panel
+- компиляция launcher-java
+
+### 2. Запуск всех сервисов для разработки
+
+```powershell
+npm run dev:all
+```
+
+Команда поднимет отдельные процессы:
+- `api-server`
+- `admin-panel` (Vite dev server)
+- `launcher-java` (JavaFX)
+
+Остановка всех поднятых процессов:
+
+```powershell
+npm run dev:stop
+```
 
 ## 📁 Структура проекта
 
