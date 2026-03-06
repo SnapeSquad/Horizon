@@ -22,6 +22,9 @@ Last updated: 2026-03-06
 - [x] Define runtime write safety for user DB migrations.
   - Scope: safe `ALTER TABLE users ADD COLUMN role` with no crash if already exists.
   - DoD: server boot handles both fresh and existing DB.
+- [x] Dependency security baseline hardened for active Node modules.
+  - Scope: remove vulnerable Telegram SDK chain, upgrade lint/build deps, apply safe npm overrides for sqlite toolchain.
+  - DoD: `npm audit` reports `0 vulnerabilities` in `api-server` and `admin-panel`.
 
 ## P1
 - [x] Forum API returns author role data.
@@ -58,3 +61,6 @@ Last updated: 2026-03-06
 - 2026-03-06: Downgraded missing Telegram token startup message from error to warning for cleaner local/CI runs.
 - 2026-03-06: Added root npm orchestration scripts (`setup`, `verify`, `dev:*`) and dev process management scripts (`dev-all.ps1`, `stop-dev.ps1`).
 - 2026-03-06: Extended smoke tests with forum topic/post creation and `author_role` contract assertions.
+- 2026-03-06: Replaced `node-telegram-bot-api` with in-repo Telegram Bot API client (`utils/telegramBotClient.js`) preserving polling/message flow.
+- 2026-03-06: Upgraded Node dependencies (`bcrypt@6`, `@typescript-eslint/*@8.56.1`) and added `api-server` overrides to patched `node-gyp/tar` chain.
+- 2026-03-06: Added root quality scripts `audit:*` and `verify:full`; confirmed `npm run verify:full` is green.

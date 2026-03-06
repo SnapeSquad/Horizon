@@ -98,6 +98,8 @@ java -jar target/horizon-launcher-1.0.0.jar
 
 ```powershell
 npm run verify
+# расширенный прогон (verify + npm audit во всех active-модулях)
+npm run verify:full
 ```
 
 Что проверяется:

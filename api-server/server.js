@@ -2,7 +2,7 @@
 require('dotenv').config(); 
 
 const express = require('express');
-const TelegramBot = require('node-telegram-bot-api');
+const TelegramBotClient = require('./utils/telegramBotClient');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
@@ -261,7 +261,7 @@ if (BOT_TOKEN === BOT_PLACEHOLDER) {
 }
 
 const bot = BOT_TOKEN && BOT_TOKEN !== BOT_PLACEHOLDER
-    ? new TelegramBot(BOT_TOKEN, { polling: true })
+    ? new TelegramBotClient(BOT_TOKEN, { polling: true })
     : null;
 
 // --- Временное хранилище для ожидания входа ---

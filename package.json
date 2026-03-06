@@ -6,6 +6,10 @@
   "scripts": {
     "setup": "powershell -ExecutionPolicy Bypass -File scripts/bootstrap.ps1",
     "verify": "powershell -ExecutionPolicy Bypass -File scripts/verify.ps1",
+    "audit:api": "npm --prefix api-server audit",
+    "audit:admin": "npm --prefix admin-panel audit",
+    "audit:all": "npm run audit:api && npm run audit:admin",
+    "verify:full": "npm run verify && npm run audit:all",
     "dev:api": "npm --prefix api-server start",
     "dev:admin": "npm --prefix admin-panel run dev -- --host",
     "dev:launcher": "mvn -f launcher-java/pom.xml javafx:run",

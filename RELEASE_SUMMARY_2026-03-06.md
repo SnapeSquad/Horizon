@@ -17,10 +17,16 @@ This release delivers a clean, reproducible baseline for Horizon with stabilized
   - `scripts/verify.ps1`
 - Added `api-server/.env.example` and synced docs with actual endpoints.
 - Removed generated/runtime artifacts from version control (`node_modules`, `target`, `dist`, `.env`, Gradle caches).
+- Replaced `node-telegram-bot-api` with a local Telegram Bot API polling client (`api-server/utils/telegramBotClient.js`).
+- Upgraded Node dependency baseline (`bcrypt@6`, `@typescript-eslint/*@8.56.1`, `vite@7`) and hardened `sqlite3` toolchain via npm `overrides`.
+- Added root audit scripts (`audit:api`, `audit:admin`, `audit:all`) and one-command full gate (`verify:full`).
+- Achieved clean security baseline for active modules: `npm audit` = `0 vulnerabilities` in `api-server` and `admin-panel`.
 
 ## Verification Command
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1
+# full check (build/test + security audit)
+npm run verify:full
 ```
 
 ## Notes

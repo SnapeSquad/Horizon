@@ -13,14 +13,21 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "minecraft-server-util": "^5.4.4",
     "multer": "^1.4.5-lts.1",
-    "node-telegram-bot-api": "^0.66.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.7"
+  },
+  "overrides": {
+    "@tootallnate/once": "3.0.1",
+    "http-proxy-agent": "7.0.2",
+    "make-fetch-happen": "14.0.3",
+    "cacache": "19.0.1",
+    "node-gyp": "11.5.0",
+    "tar": "7.5.10"
   }
 }
