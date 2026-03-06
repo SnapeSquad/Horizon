@@ -250,11 +250,14 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 // --- Инициализация Telegram ---
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const BOT_PLACEHOLDER = 'ВАШ_СЕКРЕТНЫЙ_ТОКЕН_БОТА';
+const TELEGRAM_SILENT_MODE = process.env.HORIZON_SILENT_TELEGRAM === '1' || process.env.NODE_ENV === 'test';
 
 if (BOT_TOKEN === BOT_PLACEHOLDER) {
     logger.error("ОШИБКА: Замените 'ВАШ_СЕКРЕТНЫЙ_ТОКЕН_БОТА' на реальный токен в файле .env!");
 } else if (!BOT_TOKEN) {
-    logger.warn('TELEGRAM_BOT_TOKEN не задан. Telegram Bot будет отключен.');
+    if (!TELEGRAM_SILENT_MODE) {
+        logger.warn('TELEGRAM_BOT_TOKEN не задан. Telegram Bot будет отключен.');
+    }
 }
 
 const bot = BOT_TOKEN && BOT_TOKEN !== BOT_PLACEHOLDER
@@ -369,7 +372,9 @@ if (bot) {
 
     console.log(`🤖 Telegram Bot запущен и слушает входящие сообщения (Polling).`);
 } else {
-    console.warn(`⚠️ Telegram Bot не запущен, так как не найден токен в .env.`);
+    if (!TELEGRAM_SILENT_MODE) {
+        console.warn(`⚠️ Telegram Bot не запущен, так как не найден токен в .env.`);
+    }
 }
 
 // --- Middleware ---
@@ -1497,6 +1502,8 @@ app.listen(PORT, () => {
     if (bot) {
         logger.info(`Telegram Bot: активен`);
     } else {
-        logger.warn(`Telegram Bot: не настроен (добавьте TELEGRAM_BOT_TOKEN в .env)`);
+        if (!TELEGRAM_SILENT_MODE) {
+            logger.warn(`Telegram Bot: не настроен (добавьте TELEGRAM_BOT_TOKEN в .env)`);
+        }
     }
 });

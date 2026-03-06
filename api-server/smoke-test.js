@@ -98,6 +98,8 @@ async function runSmokeChecks() {
         stdio: 'inherit',
         env: {
           ...process.env,
+          NODE_ENV: 'test',
+          HORIZON_SILENT_TELEGRAM: '1',
           TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || '',
         },
       });
