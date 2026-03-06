@@ -1,0 +1,44 @@
+{
+  "name": "horizon-launcher",
+  "version": "1.0.0",
+  "description": "Horizon Minecraft Launcher built with Electron",
+  "main": "launcher/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --publish always"
+  },
+  "keywords": [
+    "electron",
+    "minecraft",
+    "launcher"
+  ],
+  "author": "Isya",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "electron-better-ipc": "^2.0.1",
+    "electron-updater": "^6.1.7",
+    "minecraft-launcher-core": "^3.18.2"
+  },
+  "build": {
+    "appId": "com.horizon.launcher",
+    "productName": "HorizonLauncher",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "launcher/icon.ico"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "SnapeSquad",
+        "repo": "Horizon-Launcher"
+      }
+    ]
+  }
+}

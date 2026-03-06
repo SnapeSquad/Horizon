@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-text-main font-sans;
+    background-color: #14141e;
+  }
+}
+
+@layer utilities {
+  /* Glass Panel Effect */
+  .glass-panel {
+    background: rgba(30, 30, 45, 0.6);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+  }
+
+  /* Shimmering Text for Owner/Curator */
+  .shimmer-text {
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end), var(--gradient-start));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+  }
+
+  .shimmer-owner {
+    --gradient-start: #8B0000;
+    --gradient-end: #FF0000;
+  }
+
+  .shimmer-curator {
+    --gradient-start: #FF4B4B;
+    --gradient-end: #FF9E9E;
+  }
+
+  /* Gradient Button */
+  .gradient-button {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+    transition: all 0.3s ease;
+  }
+
+  .gradient-button:hover {
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+    transform: scale(1.05);
+  }
+
+  .gradient-button:active {
+    transform: scale(0.98);
+  }
+
+  /* Pulse Glow Effect */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Input with bottom border */
+  .input-bottom-border {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .input-bottom-border:focus {
+    border-bottom-color: #00f2fe;
+  }
+
+  /* Role Gradient Text */
+  .role-gradient-owner {
+    background: linear-gradient(90deg, #8B0000, #FF0000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+  }
+
+  .role-gradient-curator {
+    background: linear-gradient(90deg, #FF4B4B, #FF9E9E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  .role-gradient-ulta {
+    background: linear-gradient(90deg, #a18cd1, #fdc2ed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: underline;
+  }
+
+  .role-gradient-prime {
+    background: linear-gradient(90deg, #54daf4, #545ed6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  .role-gradient-boost {
+    background: linear-gradient(90deg, #f6d14a, #862f51);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-style: italic;
+  }
+}

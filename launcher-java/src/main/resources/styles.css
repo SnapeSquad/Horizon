@@ -1,0 +1,734 @@
+/* Dark Liquid Glass Theme для Horizon Launcher */
+/* Строго следуем цветам из tech.md */
+
+.root {
+    -fx-font-family: "Minecraft Unicode", "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -fx-font-smoothing-type: gray;
+    -fx-background-color: #14141e; /* Deep Navy - основной фон */
+}
+
+/* Главный контейнер с эффектом размытия фона */
+.main-container {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);
+    -fx-background-insets: 0;
+}
+
+/* Панель с эффектом стекла (Glass Panel) */
+.glass-pane {
+    -fx-background-color: rgba(30, 30, 45, 0.6); /* Surface из tech.md */
+    -fx-background-radius: 15px;
+    -fx-background-insets: 0;
+    -fx-border-color: rgba(255, 255, 255, 0.1); /* Borders из tech.md */
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    /* Backdrop blur 50px - JavaFX не поддерживает напрямую, используем многослойный эффект */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0, 0, 8),
+                dropshadow(gaussian, rgba(102, 126, 234, 0.1), 30, 0, 0, 12),
+                innershadow(gaussian, rgba(255, 255, 255, 0.05), 10, 0, 0, 0);
+}
+
+.glass-pane:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.75);
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 25, 0, 0, 10),
+                dropshadow(gaussian, rgba(102, 126, 234, 0.15), 35, 0, 0, 15),
+                innershadow(gaussian, rgba(255, 255, 255, 0.08), 12, 0, 0, 0);
+}
+
+/* TextField стили */
+.text-field {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 15px;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 18px;
+    -fx-pref-height: 44px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+.text-field:focused {
+    -fx-background-color: transparent; /* No background на focus */
+    -fx-border-color: #00f2fe; /* Cyber Cyan на focus */
+    -fx-border-width: 0 0 2 0; /* Только нижняя граница */
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.4), 10, 0, 0, 3);
+}
+
+.text-field:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.22);
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+}
+
+.text-field:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 3, 0, 0, 1);
+}
+
+.text-field .prompt-text {
+    -fx-fill: #A0A0B0; /* Text Muted из tech.md */
+}
+
+/* PasswordField стили (наследует от TextField) */
+.password-field {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 15px;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 12px 18px;
+    -fx-pref-height: 44px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+.password-field:focused {
+    -fx-background-color: transparent; /* No background на focus */
+    -fx-border-color: #00f2fe; /* Cyber Cyan на focus */
+    -fx-border-width: 0 0 2 0; /* Только нижняя граница */
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.4), 10, 0, 0, 3);
+}
+
+.password-field:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.22);
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+}
+
+.password-field:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 3, 0, 0, 1);
+}
+
+.password-field .prompt-text {
+    -fx-fill: rgba(255, 255, 255, 0.6);
+}
+
+/* Button стили с градиентом */
+.button {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2); /* Primary Gradient из tech.md */
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-text-fill: white; /* Text Main из tech.md */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 32px;
+    -fx-pref-height: 48px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.5), 10, 0, 0, 4);
+    -fx-background-insets: 0;
+}
+
+.button:hover {
+    -fx-background-color: rgba(102, 126, 234, 0.9);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.6), 15, 0, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.button:pressed {
+    -fx-background-color: rgba(102, 126, 234, 0.8);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 5, 0, 0, 2);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.button:disabled {
+    -fx-background-color: rgba(102, 126, 234, 0.4);
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 1);
+    -fx-cursor: default;
+}
+
+/* Вторичная кнопка */
+.button-secondary {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+.button-secondary:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+}
+
+.button-secondary:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Label стили */
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.label-title {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.label-subtitle {
+    -fx-text-fill: #A0A0B0; /* Text Muted из tech.md */
+    -fx-font-size: 16px;
+}
+
+.label-error {
+    -fx-text-fill: rgba(255, 100, 100, 1);
+    -fx-font-size: 12px;
+}
+
+.label-success {
+    -fx-text-fill: rgba(100, 255, 100, 1);
+    -fx-font-size: 12px;
+}
+
+/* Поле ввода кода 2FA - Glass boxes */
+.code-field {
+    -fx-background-color: rgba(30, 30, 45, 0.6); /* Surface из tech.md */
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1); /* Borders из tech.md */
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-text-fill: white; /* Text Main из tech.md */
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-padding: 12px;
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+}
+
+.code-field:focused {
+    -fx-background-color: rgba(30, 30, 45, 0.8);
+    -fx-border-color: #00f2fe; /* Cyber Cyan на focus */
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.5), 10, 0, 0, 3);
+}
+
+/* Контейнер для полей кода */
+.code-container {
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+}
+
+/* VBox и HBox стили */
+.vbox, .hbox {
+    -fx-background-color: transparent;
+}
+
+/* ScrollPane стили */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Разделитель */
+.separator {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Прогресс индикатор */
+.progress-indicator {
+    -fx-progress-color: rgba(102, 126, 234, 1);
+}
+
+/* Фоновый градиент для главного окна */
+.window-background {
+    -fx-background-color: #14141e; /* Background из tech.md */
+}
+
+/* Активный элемент с Cyber Cyan glow */
+.active-icon {
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.8), 25, 0, 0, 0),
+                dropshadow(gaussian, rgba(0, 242, 254, 0.4), 40, 0, 0, 0);
+}
+
+/* Neon glow эффект для активных элементов */
+.neon-glow {
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.9), 30, 0, 0, 0),
+                dropshadow(gaussian, rgba(102, 126, 234, 0.6), 50, 0, 0, 0);
+}
+
+.neon-glow-violet {
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.9), 30, 0, 0, 0),
+                dropshadow(gaussian, rgba(118, 75, 162, 0.6), 50, 0, 0, 0);
+}
+
+/* Role Badge стили */
+.role-owner {
+    -fx-text-fill: linear-gradient(to right, #8B0000, #FF0000);
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 0.6), 15, 0, 0, 0);
+}
+
+.role-curator {
+    -fx-text-fill: linear-gradient(to right, #FF4B4B, #FF9E9E);
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-effect: dropshadow(gaussian, rgba(255, 75, 75, 0.5), 12, 0, 0, 0);
+}
+
+/* Анимированные роли */
+.role-animated {
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 0.4), 20, 0, 0, 0);
+}
+
+.role-admin {
+    -fx-text-fill: #FF6B6B;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+.role-moderator {
+    -fx-text-fill: #2ecc71;
+}
+
+.role-helper {
+    -fx-text-fill: #3498db;
+    -fx-font-style: italic;
+}
+
+.role-ulta {
+    -fx-text-fill: linear-gradient(to right, #a18cd1, #fdc2ed);
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-underline: true;
+}
+
+.role-prime {
+    -fx-text-fill: linear-gradient(to right, #54daf4, #545ed6);
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+.role-boost {
+    -fx-text-fill: linear-gradient(to right, #f6d14a, #862f51);
+    -fx-font-style: italic;
+}
+
+.role-player {
+    -fx-text-fill: #B0B0B0;
+    -fx-border-color: #B0B0B0;
+    -fx-border-width: 1px;
+}
+
+/* Pulse glow эффект для кнопок */
+.button-pulse {
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.5), 20, 0, 0, 0);
+}
+
+/* Glass boxes для 2FA */
+.code-field-glass {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+}
+
+/* Стили для новостных карточек */
+.news-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+}
+
+.news-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.8);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Стили для карточек серверов */
+.server-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-cursor: hand;
+}
+
+.server-card.selected {
+    -fx-background-color: rgba(102, 126, 234, 0.3);
+    -fx-border-color: #00f2fe;
+    -fx-border-width: 2px;
+}
+
+.server-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.8);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Стили для карточек плащей */
+.cape-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-cursor: hand;
+}
+
+.cape-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.8);
+    -fx-border-color: #00f2fe;
+    -fx-border-width: 2px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.5), 15, 0, 0, 0);
+}
+
+/* Плавные переходы между секциями */
+.section-transition {
+    -fx-opacity: 0;
+}
+
+.section-transition.visible {
+    -fx-opacity: 1;
+}
+
+/* Анимация появления секций */
+@keyframes fadeIn {
+    from {
+        -fx-opacity: 0;
+    }
+    to {
+        -fx-opacity: 1;
+    }
+}
+
+/* Улучшенные стили для карточек товаров магазина */
+.store-item-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);
+    -fx-padding: 12px;
+}
+
+.store-item-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.85);
+    -fx-border-color: rgba(102, 126, 234, 0.5);
+    -fx-border-width: 2px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.6), 20, 0, 0, 8),
+                dropshadow(gaussian, rgba(0, 242, 254, 0.3), 30, 0, 0, 12);
+}
+
+.store-item-card:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.store-item-badge {
+    -fx-padding: 4px 8px;
+    -fx-background-radius: 6px;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.store-item-badge-new {
+    -fx-background-color: #2ecc71;
+    -fx-effect: dropshadow(gaussian, rgba(46, 204, 113, 0.6), 8, 0, 0, 2);
+}
+
+.store-item-badge-discount {
+    -fx-background-color: #e74c3c;
+    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.6), 8, 0, 0, 2);
+}
+
+.store-item-image {
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
+}
+
+/* Улучшенные стили для карточек тем форума */
+.forum-topic-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 3);
+    -fx-padding: 15px;
+}
+
+.forum-topic-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.8);
+    -fx-border-color: rgba(0, 242, 254, 0.4);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.3), 15, 0, 0, 5),
+                dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);
+}
+
+.forum-topic-card.pinned {
+    -fx-border-color: rgba(255, 215, 0, 0.5);
+    -fx-border-width: 2px;
+    -fx-background-color: rgba(255, 215, 0, 0.05);
+}
+
+.forum-topic-card.locked {
+    -fx-opacity: 0.7;
+}
+
+.forum-topic-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.forum-icon-pinned {
+    -fx-text-fill: #FFD700;
+    -fx-font-size: 14px;
+}
+
+.forum-icon-locked {
+    -fx-text-fill: #A0A0B0;
+    -fx-font-size: 14px;
+}
+
+/* Улучшенные стили для постов форума */
+.forum-post-card {
+    -fx-background-color: rgba(30, 30, 45, 0.5);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+.forum-post-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.65);
+    -fx-border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Улучшенные стили для категорий форума */
+.forum-category-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 3);
+}
+
+.forum-category-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.8);
+    -fx-border-color: rgba(102, 126, 234, 0.4);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 15, 0, 0, 5);
+}
+
+/* Улучшенные стили для навигационных кнопок */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #A0A0B0;
+    -fx-font-size: 24px;
+    -fx-cursor: hand;
+    -fx-padding: 10px;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(0, 242, 254, 0.1);
+    -fx-text-fill: #00f2fe;
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.4), 15, 0, 0, 0);
+}
+
+.nav-button.active {
+    -fx-background-color: rgba(0, 242, 254, 0.2);
+    -fx-text-fill: #00f2fe;
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.6), 20, 0, 0, 0),
+                dropshadow(gaussian, rgba(0, 242, 254, 0.3), 30, 0, 0, 0);
+}
+
+/* Улучшенные стили для главной кнопки PLAY */
+.play-button {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-background-radius: 20px;
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 20px 60px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.7), 25, 0, 0, 8),
+                dropshadow(gaussian, rgba(0, 242, 254, 0.4), 40, 0, 0, 12);
+}
+
+.play-button:hover {
+    -fx-background-color: linear-gradient(to right, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.9), 30, 0, 0, 10),
+                dropshadow(gaussian, rgba(0, 242, 254, 0.6), 50, 0, 0, 15);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.play-button:pressed {
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+/* Улучшенные стили для карточек серверов */
+.server-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 4);
+}
+
+.server-card.selected {
+    -fx-background-color: rgba(102, 126, 234, 0.3);
+    -fx-border-color: #00f2fe;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.5), 20, 0, 0, 8),
+                dropshadow(gaussian, rgba(102, 126, 234, 0.3), 30, 0, 0, 12);
+}
+
+.server-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.8);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 12, 0, 0, 5);
+}
+
+/* Улучшенные стили для карточек плащей */
+.cape-card {
+    -fx-background-color: rgba(30, 30, 45, 0.6);
+    -fx-background-radius: 12px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 3);
+}
+
+.cape-card:hover {
+    -fx-background-color: rgba(30, 30, 45, 0.85);
+    -fx-border-color: #00f2fe;
+    -fx-border-width: 2px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 242, 254, 0.6), 20, 0, 0, 8),
+                dropshadow(gaussian, rgba(0, 0, 0, 0.2), 12, 0, 0, 5);
+}
+
+.cape-card.selected {
+    -fx-background-color: rgba(0, 242, 254, 0.15);
+    -fx-border-color: #00f2fe;
+    -fx-border-width: 2px;
+}
+
+/* Улучшенные стили для ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(0, 242, 254, 0.4);
+}
+
+.scroll-bar .track {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 5px;
+}
+
+/* Улучшенные стили для разделителей */
+.separator {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-pref-height: 1px;
+}
+
+.separator-vertical {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-pref-width: 1px;
+}
+
+/* Улучшенные стили для Tooltip */
+.tooltip {
+    -fx-background-color: rgba(30, 30, 45, 0.95);
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 8px 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 4);
+}
+
+/* Плавные переходы для всех элементов */
+* {
+    -fx-transition-duration: 200ms;
+}
+
+/* Улучшенные стили для ProgressBar */
+.progress-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5px;
+    -fx-pref-height: 8px;
+}
+
+.progress-bar .track {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5px;
+}
+
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.6), 8, 0, 0, 2);
+}
