@@ -1,9 +1,9 @@
-﻿$ErrorActionPreference = 'Stop'
-
-param(
+﻿param(
   [switch]$NoAdminPanel,
   [switch]$NoLauncher
 )
+
+$ErrorActionPreference = 'Stop'
 
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $statePath = Join-Path $PSScriptRoot 'dev-processes.json'
