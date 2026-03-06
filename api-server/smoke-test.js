@@ -82,7 +82,63 @@ async function runSmokeChecks() {
     throw new Error('GET /api/forum/categories failed smoke contract');
   }
 
-  console.log('Smoke checks passed: auth, cosmetics, payment, forum categories');
+  if (forum.json.categories.length === 0) {
+    throw new Error('Forum categories are empty');
+  }
+
+  const categoryId = forum.json.categories[0].id;
+  const topicTitle = `Smoke Topic ${Date.now()}`;
+  const topicContent = 'Smoke topic content';
+
+  const topicCreate = await requestJson('/api/forum/topics', {
+    method: 'POST',
+    body: JSON.stringify({
+      category_id: categoryId,
+      title: topicTitle,
+      content: topicContent,
+      author_username: username,
+    }),
+  });
+  if (!topicCreate.response.ok || !topicCreate.json.success || !topicCreate.json.topic_id) {
+    throw new Error('POST /api/forum/topics failed smoke contract');
+  }
+
+  const topics = await requestJson(`/api/forum/topics?category_id=${encodeURIComponent(categoryId)}`);
+  if (!topics.response.ok || !topics.json.success || !Array.isArray(topics.json.topics)) {
+    throw new Error('GET /api/forum/topics failed smoke contract');
+  }
+
+  const createdTopic = topics.json.topics.find((t) => t.id === topicCreate.json.topic_id);
+  if (!createdTopic || typeof createdTopic.author_role !== 'string') {
+    throw new Error('Forum topic response missing author_role');
+  }
+
+  const postContent = 'Smoke post content';
+  const postCreate = await requestJson('/api/forum/posts', {
+    method: 'POST',
+    body: JSON.stringify({
+      topic_id: topicCreate.json.topic_id,
+      content: postContent,
+      author_username: username,
+    }),
+  });
+  if (!postCreate.response.ok || !postCreate.json.success || !postCreate.json.post_id) {
+    throw new Error('POST /api/forum/posts failed smoke contract');
+  }
+
+  const posts = await requestJson(
+    `/api/forum/posts?topic_id=${encodeURIComponent(topicCreate.json.topic_id)}&username=${encodeURIComponent(username)}`
+  );
+  if (!posts.response.ok || !posts.json.success || !Array.isArray(posts.json.posts)) {
+    throw new Error('GET /api/forum/posts failed smoke contract');
+  }
+
+  const createdPost = posts.json.posts.find((p) => p.id === postCreate.json.post_id);
+  if (!createdPost || typeof createdPost.author_role !== 'string') {
+    throw new Error('Forum post response missing author_role');
+  }
+
+  console.log('Smoke checks passed: auth, cosmetics, payment, forum + role contracts');
 }
 
 (async () => {

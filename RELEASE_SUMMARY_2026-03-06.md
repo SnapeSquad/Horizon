@@ -10,6 +10,7 @@ This release delivers a clean, reproducible baseline for Horizon with stabilized
 - Extended forum API responses with `author_role`.
 - Implemented accessory preview loading flow in Java launcher store.
 - Added API smoke tests (auth + cosmetics + payment + forum categories).
+- Extended API smoke tests with forum topic/post flows and `author_role` response checks.
 - Added CI workflow for API checks, admin-panel build, and Java compile.
 - Added bootstrap/verify scripts:
   - `scripts/bootstrap.ps1`

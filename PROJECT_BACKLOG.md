@@ -57,3 +57,4 @@ Last updated: 2026-03-06
 - 2026-03-06: Added `scripts/bootstrap.ps1` and `scripts/verify.ps1` for repeatable setup/verification.
 - 2026-03-06: Downgraded missing Telegram token startup message from error to warning for cleaner local/CI runs.
 - 2026-03-06: Added root npm orchestration scripts (`setup`, `verify`, `dev:*`) and dev process management scripts (`dev-all.ps1`, `stop-dev.ps1`).
+- 2026-03-06: Extended smoke tests with forum topic/post creation and `author_role` contract assertions.
