@@ -1,4 +1,7 @@
-﻿const { spawn } = require('child_process');
+﻿const path = require('path');
+const { spawn } = require('child_process');
+
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const BASE_URL = 'http://127.0.0.1:3000';
 const STARTUP_TIMEOUT_MS = 20000;
@@ -9,9 +12,10 @@ async function sleep(ms) {
 }
 
 async function requestJson(path, options = {}) {
+  const defaultHeaders = options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' };
   const response = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
     ...options,
+    headers: { ...defaultHeaders, ...(options.headers || {}) },
   });
 
   let json = null;
@@ -47,6 +51,7 @@ async function waitForServerReady(timeoutMs) {
 async function runSmokeChecks() {
   const username = `smoke_${Date.now().toString(36).slice(-8)}`;
   const password = 'smokePass123';
+  const adminToken = process.env.ADMIN_TOKEN || 'horizon_admin_2024';
 
   const register = await requestJson('/api/auth/register', {
     method: 'POST',
@@ -138,7 +143,80 @@ async function runSmokeChecks() {
     throw new Error('Forum post response missing author_role');
   }
 
-  console.log('Smoke checks passed: auth, cosmetics, payment, forum + role contracts');
+  const adminUsers = await requestJson('/api/admin/users', {
+    headers: { 'x-admin-token': adminToken },
+  });
+  if (!adminUsers.response.ok || !adminUsers.json.success || !Array.isArray(adminUsers.json.users)) {
+    throw new Error('GET /api/admin/users failed smoke contract');
+  }
+
+  const newsTitle = `Smoke News ${Date.now()}`;
+  const newsCreate = await requestJson('/api/admin/news', {
+    method: 'POST',
+    headers: { 'x-admin-token': adminToken },
+    body: JSON.stringify({
+      title: newsTitle,
+      content: 'Smoke news content',
+      author: 'smoke-test',
+    }),
+  });
+  if (!newsCreate.response.ok || !newsCreate.json.success || !newsCreate.json.news_id) {
+    throw new Error('POST /api/admin/news failed smoke contract');
+  }
+
+  const newsList = await requestJson('/api/admin/news', {
+    headers: { 'x-admin-token': adminToken },
+  });
+  if (!newsList.response.ok || !newsList.json.success || !Array.isArray(newsList.json.news)) {
+    throw new Error('GET /api/admin/news failed smoke contract');
+  }
+
+  const createdNews = newsList.json.news.find((entry) => entry.id === newsCreate.json.news_id);
+  if (!createdNews) {
+    throw new Error('Created news item not found in /api/admin/news response');
+  }
+
+  const newsDelete = await requestJson(`/api/admin/news/${newsCreate.json.news_id}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-token': adminToken },
+  });
+  if (!newsDelete.response.ok || !newsDelete.json.success) {
+    throw new Error('DELETE /api/admin/news/:id failed smoke contract');
+  }
+
+  const cosmeticName = `Smoke Cosmetic ${Date.now()}`;
+  const formData = new FormData();
+  formData.append('name', cosmeticName);
+  formData.append('description', 'smoke cosmetic');
+  formData.append('pivot_point', 'head');
+  formData.append('price', '5');
+  formData.append('rarity', 'common');
+  formData.append(
+    'model',
+    new File([JSON.stringify({ format_version: '1.12.0', 'minecraft:geometry': [] })], 'model.json', {
+      type: 'application/json',
+    })
+  );
+  formData.append('texture', new File(['smoke-texture'], 'texture.png', { type: 'image/png' }));
+
+  const cosmeticCreate = await requestJson('/api/admin/cosmetics', {
+    method: 'POST',
+    headers: { 'x-admin-token': adminToken },
+    body: formData,
+  });
+  if (!cosmeticCreate.response.ok || !cosmeticCreate.json.success || !cosmeticCreate.json.cosmetic?.id) {
+    throw new Error('POST /api/admin/cosmetics failed smoke contract');
+  }
+
+  const cosmeticDelete = await requestJson(`/api/admin/cosmetics/${cosmeticCreate.json.cosmetic.id}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-token': adminToken },
+  });
+  if (!cosmeticDelete.response.ok || !cosmeticDelete.json.success) {
+    throw new Error('DELETE /api/admin/cosmetics/:id failed smoke contract');
+  }
+
+  console.log('Smoke checks passed: auth, cosmetics, payment, forum, admin(news/cosmetics/users) + role contracts');
 }
 
 (async () => {
@@ -178,3 +256,4 @@ async function runSmokeChecks() {
     }
   }
 })();
+

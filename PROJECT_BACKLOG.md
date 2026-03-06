@@ -36,6 +36,9 @@ Last updated: 2026-03-06
 - [x] Document single source of truth for launcher target.
   - Scope: explicit status for `launcher-java` vs legacy electron launcher paths.
   - DoD: README + spec updated consistently.
+- [x] Replace admin-panel mocks with live API integration.
+  - Scope: wire auth/2FA + admin users/bans/news/cosmetics to `api-server`.
+  - DoD: admin-panel performs real CRUD/actions against backend contracts.
 
 ## P2
 - [x] Add smoke tests (API auth + store/forum minimal paths).
@@ -64,3 +67,7 @@ Last updated: 2026-03-06
 - 2026-03-06: Replaced `node-telegram-bot-api` with in-repo Telegram Bot API client (`utils/telegramBotClient.js`) preserving polling/message flow.
 - 2026-03-06: Upgraded Node dependencies (`bcrypt@6`, `@typescript-eslint/*@8.56.1`) and added `api-server` overrides to patched `node-gyp/tar` chain.
 - 2026-03-06: Added root quality scripts `audit:*` and `verify:full`; confirmed `npm run verify:full` is green.
+- 2026-03-06: Reworked `admin-panel` auth flow (login/2FA + optional admin token) and persisted session handling.
+- 2026-03-06: Connected admin-panel tabs to live API (`/api/admin/users|bans|news|cosmetics`) and enabled real actions (ban/unban, give currency, upload/delete cosmetics, create/delete news).
+- 2026-03-06: Added `DELETE /api/admin/cosmetics/:id` backend endpoint and expanded smoke checks for admin contracts.
+- 2026-03-06: Hardened verification script (`scripts/verify.ps1`) to fail on external command non-zero exit codes.

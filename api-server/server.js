@@ -522,7 +522,11 @@ app.post('/api/auth/register', authRateLimiter(5, 15 * 60 * 1000), (req, res) =>
                 }
                 
                 // Генерируем токен для нового пользователя
-                const token = jwt.sign({ username: validUsername, id: this.lastID }, JWT_SECRET, { expiresIn: '7d' });
+                const token = jwt.sign(
+                    { username: validUsername, id: this.lastID, role: 'player', admin: false },
+                    JWT_SECRET,
+                    { expiresIn: '7d' }
+                );
                 
                 console.log(`[REGISTER] Пользователь ${validUsername} успешно зарегистрирован.`);
                 res.json({ success: true, message: 'Регистрация прошла успешно!', token: token });
@@ -654,10 +658,17 @@ app.post('/api/auth/login', authRateLimiter(5, 15 * 60 * 1000), (req, res) => {
                 }
             }
 
+            const resolvedRole = user.role || 'player';
+            const isAdmin = resolvedRole === 'admin' || resolvedRole === 'owner';
+
             console.log(`[LOGIN] Пользователь ${user.username} успешно вошел в систему.`);
             res.json({ 
                 success: true, 
-                token: jwt.sign({ username: user.username, id: user.id }, JWT_SECRET, { expiresIn: '7d' }), 
+                token: jwt.sign(
+                    { username: user.username, id: user.id, role: resolvedRole, admin: isAdmin },
+                    JWT_SECRET,
+                    { expiresIn: '7d' }
+                ), 
                 username: user.username,
                 has2FA: user.two_factor_enabled === 1
             });
@@ -735,10 +746,17 @@ app.post('/api/auth/verify-2fa', twoFARateLimiter(3, 5 * 60 * 1000), (req, res) 
             // Код валиден, удаляем его и выдаем токен
             delete pendingTgLogins[codeKey];
             
+            const resolvedRole = user.role || 'player';
+            const isAdmin = resolvedRole === 'admin' || resolvedRole === 'owner';
+
             console.log(`[VERIFY-2FA] Пользователь ${validUsername} успешно прошел 2FA.`);
             res.json({ 
                 success: true, 
-                token: jwt.sign({ username: user.username, id: user.id }, JWT_SECRET, { expiresIn: '7d' }), 
+                token: jwt.sign(
+                    { username: user.username, id: user.id, role: resolvedRole, admin: isAdmin },
+                    JWT_SECRET,
+                    { expiresIn: '7d' }
+                ), 
                 username: user.username,
                 has2FA: true
             });
@@ -1282,6 +1300,43 @@ app.get('/api/admin/cosmetics', verifyAdminToken, (req, res) => {
             return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
         }
         res.json({ success: true, cosmetics: cosmetics || [] });
+    });
+});
+
+// --- Удалить косметику (админ) ---
+app.delete('/api/admin/cosmetics/:id', verifyAdminToken, (req, res) => {
+    const cosmeticId = Number.parseInt(req.params.id, 10);
+    if (!Number.isInteger(cosmeticId) || cosmeticId <= 0) {
+        return res.status(400).json({ success: false, message: 'Некорректный ID косметики.' });
+    }
+
+    db.get('SELECT model_file_path, texture_file_path FROM cosmetics WHERE id = ?', [cosmeticId], (selectErr, cosmetic) => {
+        if (selectErr) {
+            return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+        }
+        if (!cosmetic) {
+            return res.status(404).json({ success: false, message: 'Косметика не найдена.' });
+        }
+
+        db.run('DELETE FROM cosmetics WHERE id = ?', [cosmeticId], function(deleteErr) {
+            if (deleteErr) {
+                return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+            }
+
+            const modelPath = cosmetic.model_file_path;
+            const texturePath = cosmetic.texture_file_path;
+            [modelPath, texturePath].forEach((filePath) => {
+                if (filePath && fs.existsSync(filePath)) {
+                    try {
+                        fs.unlinkSync(filePath);
+                    } catch (fileErr) {
+                        logger.warn(`Не удалось удалить файл косметики: ${filePath}`);
+                    }
+                }
+            });
+
+            return res.json({ success: true, message: 'Косметика удалена.' });
+        });
     });
 });
 

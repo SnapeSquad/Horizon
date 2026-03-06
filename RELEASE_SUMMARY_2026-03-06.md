@@ -21,6 +21,12 @@ This release delivers a clean, reproducible baseline for Horizon with stabilized
 - Upgraded Node dependency baseline (`bcrypt@6`, `@typescript-eslint/*@8.56.1`, `vite@7`) and hardened `sqlite3` toolchain via npm `overrides`.
 - Added root audit scripts (`audit:api`, `audit:admin`, `audit:all`) and one-command full gate (`verify:full`).
 - Achieved clean security baseline for active modules: `npm audit` = `0 vulnerabilities` in `api-server` and `admin-panel`.
+- Replaced admin-panel mock flows with real backend integration:
+  - Auth + Telegram 2FA login flow.
+  - Live admin operations for users/bans/news/cosmetics.
+- Added backend endpoint `DELETE /api/admin/cosmetics/:id` for full cosmetics management.
+- Expanded smoke tests to validate admin contracts (`/api/admin/users`, `/api/admin/news`, `/api/admin/cosmetics`).
+- Fixed verification reliability: `scripts/verify.ps1` now fails correctly on non-zero exit codes from `npm`/`mvn`.
 
 ## Verification Command
 ```powershell
