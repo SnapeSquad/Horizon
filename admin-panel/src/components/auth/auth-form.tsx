@@ -102,6 +102,11 @@ export function AuthForm({ onAuthenticated }: AuthFormProps) {
     const response = await login(normalizedUsername, password)
 
     if (isAuthSuccess(response)) {
+      const nextSession: ApiSession = {
+        accessToken: response.token,
+        adminToken: normalizedAdminToken || undefined,
+      }
+      await verifyAdminAccess(nextSession)
       onAuthenticated({
         username: response.username,
         accessToken: response.token,
@@ -160,6 +165,12 @@ export function AuthForm({ onAuthenticated }: AuthFormProps) {
       if (!isAuthSuccess(response)) {
         throw new Error("Сервер вернул неожиданный ответ при проверке 2FA.")
       }
+
+      const nextSession: ApiSession = {
+        accessToken: response.token,
+        adminToken: normalizedAdminToken || undefined,
+      }
+      await verifyAdminAccess(nextSession)
 
       onAuthenticated({
         username: response.username,
@@ -228,7 +239,7 @@ export function AuthForm({ onAuthenticated }: AuthFormProps) {
                   className="input-bottom-border w-full px-4 py-3 text-text-main placeholder-text-muted bg-transparent"
                 />
                 <p className="text-xs text-text-muted mt-2">
-                  Для админ-операций используйте роль `admin` в аккаунте или передайте `ADMIN_TOKEN`.
+                  Для админ-операций используйте роль `admin/owner` в аккаунте или передайте `ADMIN_TOKEN`.
                 </p>
               </div>
 

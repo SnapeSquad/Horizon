@@ -150,6 +150,29 @@ async function runSmokeChecks() {
     throw new Error('GET /api/admin/users failed smoke contract');
   }
 
+  const roleTarget = adminUsers.json.users.find((entry) => entry.username === username);
+  if (!roleTarget || !roleTarget.id) {
+    throw new Error('Smoke user not found in admin users list');
+  }
+
+  const rolePatch = await requestJson(`/api/admin/users/${roleTarget.id}/role`, {
+    method: 'PATCH',
+    headers: { 'x-admin-token': adminToken },
+    body: JSON.stringify({ role: 'moderator' }),
+  });
+  if (!rolePatch.response.ok || !rolePatch.json.success || rolePatch.json.role !== 'moderator') {
+    throw new Error('PATCH /api/admin/users/:id/role failed smoke contract');
+  }
+
+  const roleRestore = await requestJson(`/api/admin/users/${roleTarget.id}/role`, {
+    method: 'PATCH',
+    headers: { 'x-admin-token': adminToken },
+    body: JSON.stringify({ role: 'player' }),
+  });
+  if (!roleRestore.response.ok || !roleRestore.json.success || roleRestore.json.role !== 'player') {
+    throw new Error('PATCH /api/admin/users/:id/role restore failed smoke contract');
+  }
+
   const newsTitle = `Smoke News ${Date.now()}`;
   const newsCreate = await requestJson('/api/admin/news', {
     method: 'POST',

@@ -58,6 +58,7 @@ cp .env.example .env
 # Отредактируйте .env и укажите:
 # - TELEGRAM_BOT_TOKEN (получите у @BotFather)
 # - ADMIN_TOKEN (для админ-панели)
+# - ADMIN_USERNAME / ADMIN_PASSWORD (bootstrap админа для входа в admin-panel по JWT)
 # - JWT_SECRET (секретный ключ для JWT)
 ```
 
@@ -111,6 +112,8 @@ npm run verify:full
 
 ```powershell
 npm run dev:all
+# backend + admin-panel only (without JavaFX launcher)
+npm run dev:all -- -NoLauncher
 ```
 
 Команда поднимет отдельные процессы:
@@ -122,6 +125,18 @@ npm run dev:all
 
 ```powershell
 npm run dev:stop
+```
+
+Проверка состояния и логов dev-процессов:
+
+```powershell
+npm run dev:status
+```
+
+Диагностика окружения (PATH, зависимости, `.env`):
+
+```powershell
+npm run doctor
 ```
 
 ## 📁 Структура проекта
@@ -157,6 +172,8 @@ PORT=3000
 ADMIN_TOKEN=your_admin_token_here
 JWT_SECRET=your_jwt_secret_key_here
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change_me_admin_password
 ```
 
 ### Java Лаунчер

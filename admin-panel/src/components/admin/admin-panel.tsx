@@ -8,6 +8,7 @@ import {
   type AdminNews,
   type AdminUser,
   type BanEntry,
+  type UserRole,
   banUser,
   createNews,
   deleteCosmetic,
@@ -18,6 +19,7 @@ import {
   getBans,
   giveCurrency,
   unbanUser,
+  updateUserRole,
   uploadCosmetic,
 } from "@/lib/api"
 
@@ -40,6 +42,8 @@ interface NewsFormState {
   content: string
   imageUrl: string
 }
+
+const ROLE_OPTIONS: UserRole[] = ["player", "moderator", "curator", "admin", "owner"]
 
 function formatDate(dateValue: string | null | undefined) {
   if (!dateValue) {
@@ -306,6 +310,27 @@ export function AdminPanel({ session }: AdminPanelProps) {
     }
   }
 
+  const runRoleUpdate = async (user: AdminUser, nextRole: UserRole) => {
+    const currentRole = (user.role || "player") as UserRole
+    if (currentRole === nextRole) {
+      return
+    }
+
+    resetMessages()
+    setIsLoading(true)
+    try {
+      await updateUserRole(session, user.id, nextRole)
+      setUsers((previous) =>
+        previous.map((entry) => (entry.id === user.id ? { ...entry, role: nextRole } : entry))
+      )
+      setSuccessMessage(`Роль пользователя ${user.username} обновлена: ${currentRole} -> ${nextRole}.`)
+    } catch (error) {
+      handleRequestError(error, "Не удалось обновить роль пользователя.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const submitNews = async () => {
     resetMessages()
     if (!newsForm.title.trim() || !newsForm.content.trim()) {
@@ -523,7 +548,22 @@ export function AdminPanel({ session }: AdminPanelProps) {
                         <tr key={user.id} className="border-b border-border/50 hover:bg-surface/50">
                           <td className="py-3 px-4">{user.id}</td>
                           <td className="py-3 px-4 font-semibold">{user.username}</td>
-                          <td className="py-3 px-4 text-text-muted">{user.role || "player"}</td>
+                          <td className="py-3 px-4 text-text-muted">
+                            <select
+                              value={user.role || "player"}
+                              onChange={(event) => {
+                                void runRoleUpdate(user, event.target.value as UserRole)
+                              }}
+                              className="px-2 py-1 glass-panel bg-surface/50 rounded-md outline-none border border-transparent"
+                              disabled={isLoading}
+                            >
+                              {ROLE_OPTIONS.map((role) => (
+                                <option key={role} value={role}>
+                                  {role}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
                           <td className="py-3 px-4 text-text-muted font-mono text-xs">{user.hwid || "—"}</td>
                           <td className="py-3 px-4">{user.currency || 0}</td>
                           <td className="py-3 px-4">

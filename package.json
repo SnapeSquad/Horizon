@@ -14,7 +14,9 @@
     "dev:admin": "npm --prefix admin-panel run dev -- --host",
     "dev:launcher": "mvn -f launcher-java/pom.xml javafx:run",
     "dev:all": "powershell -ExecutionPolicy Bypass -File scripts/dev-all.ps1",
+    "dev:status": "powershell -ExecutionPolicy Bypass -File scripts/dev-status.ps1",
     "dev:stop": "powershell -ExecutionPolicy Bypass -File scripts/stop-dev.ps1",
+    "doctor": "powershell -ExecutionPolicy Bypass -File scripts/doctor.ps1",
     "start": "electron .",
     "build": "electron-builder --win --publish always"
   },

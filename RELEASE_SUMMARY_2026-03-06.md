@@ -27,12 +27,28 @@ This release delivers a clean, reproducible baseline for Horizon with stabilized
 - Added backend endpoint `DELETE /api/admin/cosmetics/:id` for full cosmetics management.
 - Expanded smoke tests to validate admin contracts (`/api/admin/users`, `/api/admin/news`, `/api/admin/cosmetics`).
 - Fixed verification reliability: `scripts/verify.ps1` now fails correctly on non-zero exit codes from `npm`/`mvn`.
+- Added admin account bootstrap from `.env` (`ADMIN_USERNAME`, `ADMIN_PASSWORD`) for JWT-based admin-panel login.
+- Added backend role management endpoint `PATCH /api/admin/users/:id/role`.
+- Added admin-panel role editing UI (moderation table) backed by live API.
+- Enforced admin access verification on admin-panel login and 2FA completion.
+- Added role update checks to smoke tests.
+- Hardened local dev orchestration:
+  - `scripts/dev-all.ps1` now validates prerequisites, writes per-service logs, and prevents duplicate runs.
+  - `scripts/dev-status.ps1` reports process health and log file paths.
+  - `scripts/stop-dev.ps1` uses process-tree termination for reliable cleanup.
+  - `scripts/doctor.ps1` validates local prerequisites and `.env` readiness.
 
 ## Verification Command
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1
 # full check (build/test + security audit)
 npm run verify:full
+# local environment diagnostic
+npm run doctor
+# start/observe/stop local dev stack
+npm run dev:all
+npm run dev:status
+npm run dev:stop
 ```
 
 ## Notes

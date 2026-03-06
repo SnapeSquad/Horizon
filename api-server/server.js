@@ -27,6 +27,13 @@ const PORT = 3000;
 const DB_PATH = path.join(__dirname, 'users.db');
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'horizon_admin_2024';
 const JWT_SECRET = process.env.JWT_SECRET || 'horizon_jwt_secret_2024';
+const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || '').trim();
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const SUPPORTED_USER_ROLES = ['player', 'moderator', 'curator', 'admin', 'owner'];
+
+if (ADMIN_TOKEN === 'horizon_admin_2024' && process.env.NODE_ENV !== 'test') {
+    logger.warn('Используется дефолтный ADMIN_TOKEN. Задайте ADMIN_TOKEN в .env для безопасного окружения.');
+}
 
 // Директории для файлов
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
@@ -95,6 +102,14 @@ function verifyAdminToken(req, res, next) {
     }
     
     return res.status(403).json({ success: false, message: 'Неверный токен авторизации.' });
+}
+
+function normalizeRole(rawRole) {
+    if (!rawRole || typeof rawRole !== 'string') {
+        return null;
+    }
+    const normalized = rawRole.trim().toLowerCase();
+    return SUPPORTED_USER_ROLES.includes(normalized) ? normalized : null;
 }
 
 // --- Инициализация SQLite БД ---
@@ -225,6 +240,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
             // Добавляем роль пользователя, если поля еще нет
             db.run(`ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'player'`, (err) => {
                 // Игнорируем ошибку, если колонка уже существует
+                bootstrapAdminUser();
             });
             
             // Инициализируем категории форума
@@ -246,6 +262,96 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
         });
     }
 });
+
+function bootstrapAdminUser() {
+    if (!ADMIN_USERNAME) {
+        logger.info('Bootstrap admin-user пропущен: ADMIN_USERNAME не задан.');
+        return;
+    }
+
+    const usernameValidation = validateUsername(ADMIN_USERNAME);
+    if (!usernameValidation.valid) {
+        logger.warn(`Bootstrap admin-user пропущен: некорректный ADMIN_USERNAME (${usernameValidation.error || 'invalid'}).`);
+        return;
+    }
+
+    const normalizedUsername = usernameValidation.value;
+    const hasPassword = typeof ADMIN_PASSWORD === 'string' && ADMIN_PASSWORD.length > 0;
+
+    const applyRoleOnly = (userId) => {
+        db.run('UPDATE users SET role = ? WHERE id = ?', ['admin', userId], (updateErr) => {
+            if (updateErr) {
+                logger.error('Ошибка bootstrap admin-user (role update)', updateErr);
+                return;
+            }
+            logger.info(`Bootstrap admin-user: роль admin назначена пользователю ${normalizedUsername}.`);
+        });
+    };
+
+    const applyPasswordAndRole = (userId, isNew) => {
+        const passwordValidation = validatePassword(ADMIN_PASSWORD);
+        if (!passwordValidation.valid) {
+            logger.warn(`Bootstrap admin-user пропущен: некорректный ADMIN_PASSWORD (${passwordValidation.error || 'invalid'}).`);
+            return;
+        }
+
+        bcrypt.hash(ADMIN_PASSWORD, 10, (hashErr, hashedPassword) => {
+            if (hashErr) {
+                logger.error('Ошибка bootstrap admin-user (password hash)', hashErr);
+                return;
+            }
+
+            if (isNew) {
+                db.run(
+                    `INSERT INTO users (username, password, role, two_factor_enabled, cosmetics, currency, skin_model, cape)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                    [normalizedUsername, hashedPassword, 'admin', 0, '[]', 0, 'classic', null],
+                    function(insertErr) {
+                        if (insertErr) {
+                            logger.error('Ошибка bootstrap admin-user (insert)', insertErr);
+                            return;
+                        }
+                        logger.info(`Bootstrap admin-user: создан пользователь ${normalizedUsername} с ролью admin.`);
+                    }
+                );
+            } else {
+                db.run(
+                    'UPDATE users SET password = ?, role = ? WHERE id = ?',
+                    [hashedPassword, 'admin', userId],
+                    (updateErr) => {
+                        if (updateErr) {
+                            logger.error('Ошибка bootstrap admin-user (password update)', updateErr);
+                            return;
+                        }
+                        logger.info(`Bootstrap admin-user: пароль синхронизирован и роль admin назначена пользователю ${normalizedUsername}.`);
+                    }
+                );
+            }
+        });
+    };
+
+    db.get('SELECT id FROM users WHERE username = ?', [normalizedUsername], (selectErr, user) => {
+        if (selectErr) {
+            logger.error('Ошибка bootstrap admin-user (select)', selectErr);
+            return;
+        }
+
+        if (!user) {
+            if (!hasPassword) {
+                logger.warn('Bootstrap admin-user: пользователь не существует и ADMIN_PASSWORD не задан, создание пропущено.');
+                return;
+            }
+            applyPasswordAndRole(null, true);
+            return;
+        }
+
+        if (hasPassword) {
+            applyPasswordAndRole(user.id, false);
+        } else {
+            applyRoleOnly(user.id);
+        }
+    });
+}
 
 // --- Инициализация Telegram ---
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -1169,6 +1275,32 @@ app.get('/api/admin/users', verifyAdminToken, (req, res) => {
             return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
         }
         res.json({ success: true, users: users || [] });
+    });
+});
+
+// --- Изменить роль пользователя (админ) ---
+app.patch('/api/admin/users/:id/role', verifyAdminToken, (req, res) => {
+    const userId = Number.parseInt(req.params.id, 10);
+    const normalizedRole = normalizeRole(req.body?.role);
+
+    if (!Number.isInteger(userId) || userId <= 0) {
+        return res.status(400).json({ success: false, message: 'Некорректный ID пользователя.' });
+    }
+    if (!normalizedRole) {
+        return res.status(400).json({
+            success: false,
+            message: `Некорректная роль. Допустимые значения: ${SUPPORTED_USER_ROLES.join(', ')}.`,
+        });
+    }
+
+    db.run('UPDATE users SET role = ? WHERE id = ?', [normalizedRole, userId], function(err) {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Ошибка сервера.' });
+        }
+        if (this.changes === 0) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден.' });
+        }
+        return res.json({ success: true, message: `Роль пользователя обновлена на ${normalizedRole}.`, role: normalizedRole });
     });
 });
 

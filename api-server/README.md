@@ -25,6 +25,8 @@ PORT=3000
 ADMIN_TOKEN=your_secure_admin_token_here
 JWT_SECRET=your_jwt_secret_key_here
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token_from_botfather
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change_me_admin_password
 ```
 
 ### Запуск
@@ -67,11 +69,12 @@ pm2 start server.js --name horizon-api
 ### Админ (требуется токен)
 
 - `GET /api/admin/users` - Получить всех пользователей
+- `PATCH /api/admin/users/:id/role` - Изменить роль пользователя (`player|moderator|curator|admin|owner`)
 - `POST /api/admin/users/ban` - Забанить HWID
 - `DELETE /api/admin/users/unban/:hwid` - Разбанить HWID
 - `POST /api/admin/currency/give` - Выдать валюту
 - `GET /api/admin/news` / `POST /api/admin/news` - Управление новостями
-- `GET /api/admin/cosmetics` / `POST /api/admin/cosmetics` - Управление косметикой
+- `GET /api/admin/cosmetics` / `POST /api/admin/cosmetics` / `DELETE /api/admin/cosmetics/:id` - Управление косметикой
 
 ## 🔒 Безопасность
 

@@ -39,6 +39,12 @@ Last updated: 2026-03-06
 - [x] Replace admin-panel mocks with live API integration.
   - Scope: wire auth/2FA + admin users/bans/news/cosmetics to `api-server`.
   - DoD: admin-panel performs real CRUD/actions against backend contracts.
+- [x] Close admin access bootstrap and role-management flow.
+  - Scope: bootstrap admin account from `.env`, enforce admin access check in panel auth, allow role edits from admin UI/API.
+  - DoD: JWT admin login works with bootstrap account; role update endpoint + UI are covered by smoke checks.
+- [x] Harden local dev orchestration (`dev:all`) and diagnostics.
+  - Scope: add preflight checks, process status/log visibility, and reliable process-tree stop.
+  - DoD: `npm run dev:all`, `npm run dev:status`, `npm run dev:stop`, `npm run doctor` provide deterministic local workflow.
 
 ## P2
 - [x] Add smoke tests (API auth + store/forum minimal paths).
@@ -71,3 +77,7 @@ Last updated: 2026-03-06
 - 2026-03-06: Connected admin-panel tabs to live API (`/api/admin/users|bans|news|cosmetics`) and enabled real actions (ban/unban, give currency, upload/delete cosmetics, create/delete news).
 - 2026-03-06: Added `DELETE /api/admin/cosmetics/:id` backend endpoint and expanded smoke checks for admin contracts.
 - 2026-03-06: Hardened verification script (`scripts/verify.ps1`) to fail on external command non-zero exit codes.
+- 2026-03-06: Added admin bootstrap from `.env` (`ADMIN_USERNAME` / `ADMIN_PASSWORD`) and role update API (`PATCH /api/admin/users/:id/role`).
+- 2026-03-06: Added role management in admin-panel moderation table and enforced admin access check after login/2FA.
+- 2026-03-06: Extended smoke tests with admin role change contract checks.
+- 2026-03-06: Reworked dev orchestration scripts with preflight checks, log files, process status command, doctor diagnostics, and tree-based stop.

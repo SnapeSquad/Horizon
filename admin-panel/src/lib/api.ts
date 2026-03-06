@@ -3,6 +3,8 @@ export interface ApiSession {
   adminToken?: string
 }
 
+export type UserRole = "player" | "moderator" | "curator" | "admin" | "owner"
+
 export interface AuthSuccessResponse {
   success: true
   token: string
@@ -25,7 +27,7 @@ export interface ApiErrorResponse {
 export interface AdminUser {
   id: number
   username: string
-  role: string | null
+  role: UserRole | null
   currency: number | null
   hwid: string | null
   created_at: string
@@ -159,6 +161,18 @@ export async function verifyAdminAccess(session: ApiSession) {
 export async function getAdminUsers(session: ApiSession) {
   const response = await requestOrThrow<{ success: true; users: AdminUser[] }>("/api/admin/users", undefined, session)
   return response.users
+}
+
+export async function updateUserRole(session: ApiSession, userId: number, role: UserRole) {
+  return requestOrThrow<{ success: true; message: string; role: UserRole }>(
+    `/api/admin/users/${userId}/role`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ role }),
+    },
+    session
+  )
 }
 
 export async function getBans(session: ApiSession) {
